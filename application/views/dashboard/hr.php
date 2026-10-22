@@ -617,10 +617,11 @@
                             <tr>
                                 <th>NIP</th>
                                 <th>Nama Lengkap</th>
+                                <th>Jabatan / Posisi</th>
                                 <th>Gender</th>
                                 <th>Departemen</th>
                                 <th>Alokasi Shift</th>
-                                <th>Peran (Role)</th>
+                                <th>Hak Akses (Role)</th>
                                 <th>Gaji Pokok</th>
                                 <th>Email Login</th>
                                 <th>Status</th>
@@ -632,6 +633,7 @@
                                 <tr>
                                     <td class="font-weight-bold font-mono"><?= $e->nip; ?></td>
                                     <td><strong><?= $e->full_name; ?></strong></td>
+                                    <td><span class="badge badge-light border text-dark font-weight-bold"><?= htmlspecialchars(!empty($e->position) ? $e->position : '-'); ?></span></td>
                                     <td><?= $e->gender == 'L' ? '<span class="badge badge-light">L</span>' : '<span class="badge badge-light">P</span>'; ?></td>
                                     <td><span class="badge badge-light border"><?= $e->dept_name; ?></span></td>
                                     <td><?= $e->shift_name; ?></td>
@@ -654,6 +656,7 @@
                                             data-id="<?= $e->id; ?>"
                                             data-nip="<?= $e->nip; ?>"
                                             data-name="<?= htmlspecialchars($e->full_name); ?>"
+                                            data-position="<?= htmlspecialchars($e->position ?? ''); ?>"
                                             data-dept="<?= $e->department_id; ?>"
                                             data-shift="<?= $e->shift_id; ?>"
                                             data-role="<?= $e->role; ?>"
@@ -946,22 +949,45 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">NOMOR INDUK KARYAWAN (NIP) *</label>
-                        <input type="text" name="nip" class="form-control" placeholder="Contoh: EMP007" required>
+                        <input type="text" name="nip" class="form-control font-mono" placeholder="Contoh: EMP007 / OPR015" required maxlength="20">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">NAMA LENGKAP *</label>
-                        <input type="text" name="full_name" class="form-control" placeholder="Nama lengkap personil" required>
+                        <input type="text" name="full_name" class="form-control" placeholder="Nama lengkap personil" required maxlength="120">
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-briefcase text-primary mr-1"></i> JABATAN / POSISI KERJA (JOB TITLE) *</label>
+                        <input type="text" name="position" class="form-control" list="job_positions_add" placeholder="Pilih atau ketik jabatan riil di pabrik..." required maxlength="100">
+                        <datalist id="job_positions_add">
+                            <option value="Operator Mesin Produksi">
+                            <option value="Teknisi Maintenance & Engineering">
+                            <option value="Staff Quality Control (QC / QA)">
+                            <option value="Staff Warehouse & Logistik">
+                            <option value="Operator Forklift & Material Handler">
+                            <option value="Staff PPIC & Production Planning">
+                            <option value="Foreman / Line Leader Produksi">
+                            <option value="Supervisor Maintenance">
+                            <option value="Staff Human Resources & GA">
+                            <option value="Staff Procurement & Purchasing">
+                            <option value="Staff Finance & Accounting">
+                            <option value="Petugas Keamanan / Security">
+                            <option value="Driver Logistik Operasional">
+                            <option value="Helper & Cleaning Service">
+                        </datalist>
+                        <small class="text-muted"><i class="fas fa-info-circle text-info mr-1"></i>Posisi/jobdesk nyata (bisa dipilih atau diketik bebas).</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">JENIS KELAMIN *</label>
                         <select name="gender" class="form-control" required>
                             <option value="L">Laki-laki (L)</option>
                             <option value="P">Perempuan (P)</option>
                         </select>
                     </div>
-                    <div class="col-md-4 mb-3">
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">DEPARTEMEN / DIVISI *</label>
                         <select name="department_id" class="form-control" required>
                             <?php foreach ($departments as $d): ?>
@@ -969,7 +995,7 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">POLA SHIFT KERJA *</label>
                         <select name="shift_id" class="form-control" required>
                             <?php foreach ($shifts as $s): ?>
@@ -982,12 +1008,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label class="font-weight-bold small text-muted">PERAN SISTEM (ROLE) *</label>
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-user-shield text-warning mr-1"></i> HAK AKSES SISTEM (ROLE) *</label>
                         <select name="role" class="form-control" required>
                             <option value="OPERATOR">OPERATOR (Pelaksana)</option>
                             <option value="SUPERVISOR">SUPERVISOR (Pemeriksa)</option>
                             <option value="HR_ADMIN">HR_ADMIN (Administrator)</option>
                         </select>
+                        <small class="text-info font-weight-bold d-block mt-1"><i class="fas fa-lock mr-1"></i>Otoritas login aplikasi</small>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="font-weight-bold small text-muted">GAJI POKOK ACUAN (RP) *</label>
@@ -1033,14 +1060,34 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">NIP</label>
-                        <input type="text" id="edit_nip" class="form-control bg-light" readonly>
+                        <input type="text" id="edit_nip" class="form-control bg-light font-mono font-weight-bold" readonly>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">NAMA LENGKAP *</label>
-                        <input type="text" name="full_name" id="edit_name" class="form-control" required>
+                        <input type="text" name="full_name" id="edit_name" class="form-control" required maxlength="120">
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-briefcase text-primary mr-1"></i> JABATAN / POSISI KERJA (JOB TITLE) *</label>
+                        <input type="text" name="position" id="edit_position" class="form-control" list="job_positions_edit" placeholder="Ketik atau pilih jabatan..." required maxlength="100">
+                        <datalist id="job_positions_edit">
+                            <option value="Operator Mesin Produksi">
+                            <option value="Teknisi Maintenance & Engineering">
+                            <option value="Staff Quality Control (QC / QA)">
+                            <option value="Staff Warehouse & Logistik">
+                            <option value="Operator Forklift & Material Handler">
+                            <option value="Staff PPIC & Production Planning">
+                            <option value="Foreman / Line Leader Produksi">
+                            <option value="Supervisor Maintenance">
+                            <option value="Staff Human Resources & GA">
+                            <option value="Staff Procurement & Purchasing">
+                            <option value="Staff Finance & Accounting">
+                            <option value="Petugas Keamanan / Security">
+                            <option value="Driver Logistik Operasional">
+                            <option value="Helper & Cleaning Service">
+                        </datalist>
+                    </div>
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">DEPARTEMEN / DIVISI *</label>
                         <select name="department_id" id="edit_dept" class="form-control" required>
@@ -1049,7 +1096,9 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
                         <label class="font-weight-bold small text-muted">ROTASI POLA SHIFT KERJA *</label>
                         <select name="shift_id" id="edit_shift" class="form-control" required>
                             <?php foreach ($shifts as $s): ?>
@@ -1059,17 +1108,15 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="font-weight-bold small text-muted">PERAN SISTEM *</label>
+                    <div class="col-md-4 mb-3">
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-user-shield text-warning mr-1"></i> HAK AKSES SISTEM (ROLE) *</label>
                         <select name="role" id="edit_role" class="form-control" required>
-                            <option value="OPERATOR">OPERATOR</option>
-                            <option value="SUPERVISOR">SUPERVISOR</option>
-                            <option value="HR_ADMIN">HR_ADMIN</option>
+                            <option value="OPERATOR">OPERATOR (Pelaksana)</option>
+                            <option value="SUPERVISOR">SUPERVISOR (Pemeriksa)</option>
+                            <option value="HR_ADMIN">HR_ADMIN (Administrator)</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label class="font-weight-bold small text-muted">GAJI POKOK ACUAN (RP) *</label>
                         <input type="number" name="base_salary" id="edit_salary" class="form-control" min="1000000" step="50000" required>
                     </div>
@@ -1169,6 +1216,7 @@ $(document).ready(function() {
         var id = $(this).data('id');
         var nip = $(this).data('nip');
         var name = $(this).data('name');
+        var position = $(this).data('position');
         var dept = $(this).data('dept');
         var shift = $(this).data('shift');
         var role = $(this).data('role');
@@ -1177,6 +1225,7 @@ $(document).ready(function() {
         $('#edit_id').val(id);
         $('#edit_nip').val(nip);
         $('#edit_name').val(name);
+        $('#edit_position').val(position);
         $('#edit_dept').val(dept);
         $('#edit_shift').val(shift);
         $('#edit_role').val(role);

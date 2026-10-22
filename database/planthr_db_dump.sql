@@ -96,6 +96,7 @@ CREATE TABLE `employees` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `nip` varchar(20) NOT NULL,
   `full_name` varchar(120) NOT NULL,
+  `position` varchar(100) NOT NULL DEFAULT 'Operator Produksi',
   `gender` enum('L','P') NOT NULL,
   `department_id` int(10) unsigned NOT NULL,
   `shift_id` int(10) unsigned NOT NULL,
@@ -124,7 +125,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES (1,'EMP001','Budi Santoso','L',5,1,'HR_ADMIN',7500000.00,'2023-01-10','hr@plant.local','\\.0P.moy7rNT2jR.8CEFwz1loI.yAdmdDSWLMxBECH.gZ6G',1,'2026-10-20 08:56:12','2026-10-22 08:29:25');
+INSERT INTO `employees` VALUES (1,'EMP001','Budi Santoso','HR & GA Section Head','L',5,1,'HR_ADMIN',7500000.00,'2023-01-10','hr@plant.local','$2y$10$AyA1vOb4KseHAmfZH2SY9uDdkrwOBf5sRSAL74i6J8bxkP46QdswW',1,'2026-10-20 08:56:12','2026-10-22 09:23:49');
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,4 +209,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-22 15:35:54
+-- Dump completed on 2026-10-22 16:23:58

@@ -245,7 +245,7 @@ class Dashboard_model extends CI_Model {
      * Detail Lembar Resmi SPL untuk Fitur Cetak Slip (Print View)
      */
     public function get_spl_by_id($id) {
-        return $this->db->select('ot.*, e.nip, e.full_name, e.gender, e.base_salary, d.dept_name, d.dept_code, s.shift_name, s.start_time AS shift_start, s.end_time AS shift_end, app.full_name AS approver_name, app.nip AS approver_nip')
+        return $this->db->select('ot.*, e.nip, e.full_name, e.position, e.gender, e.base_salary, d.dept_name, d.dept_code, s.shift_name, s.start_time AS shift_start, s.end_time AS shift_end, app.full_name AS approver_name, app.nip AS approver_nip')
             ->from('overtime_requests ot')
             ->join('employees e', 'e.id = ot.employee_id')
             ->join('departments d', 'd.id = e.department_id')

@@ -135,7 +135,7 @@
             </span>
             <h4 class="font-weight-bold text-dark m-0">Selamat Datang, <?= $this->session->userdata('full_name'); ?></h4>
             <p class="text-muted small mb-0 mt-1">
-                Departemen: <strong><?= $this->session->userdata('dept_name'); ?></strong> &bull; Peran: <strong>Staf Operasional</strong> &bull; Jadwal Reguler: <strong><?= $this->session->userdata('shift_name'); ?></strong>
+                Departemen: <strong><?= $this->session->userdata('dept_name'); ?></strong> &bull; Jabatan: <strong><?= $this->session->userdata('position') ?: 'Staf Pelaksana'; ?></strong> &bull; Jadwal Reguler: <strong><?= $this->session->userdata('shift_name'); ?></strong>
                 <?php if (!empty($shift)): ?>
                     (<?= substr($shift->start_time, 0, 5); ?> - <?= substr($shift->end_time, 0, 5); ?> WIB<?= $shift->is_cross_day ? ' &bull; Lintas Hari' : ''; ?>)
                 <?php endif; ?>

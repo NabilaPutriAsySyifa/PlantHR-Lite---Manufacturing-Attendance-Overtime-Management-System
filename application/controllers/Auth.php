@@ -33,6 +33,7 @@ class Auth extends MY_Controller {
                     'user_id'       => $user->id,
                     'nip'           => $user->nip,
                     'full_name'     => $user->full_name,
+                    'position'      => $user->position,
                     'email'         => $user->email,
                     'role'          => $user->role,
                     'department_id' => $user->department_id,

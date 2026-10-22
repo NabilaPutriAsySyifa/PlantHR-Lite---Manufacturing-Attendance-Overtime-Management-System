@@ -204,8 +204,12 @@
             <tr>
                 <th>Nama Lengkap</th>
                 <td class="font-weight-bold text-primary"><?= $spl->full_name; ?></td>
+                <th>Jabatan / Posisi</th>
+                <td class="font-weight-bold"><?= !empty($spl->position) ? $spl->position : 'Staf Operasional'; ?></td>
+            </tr>
+            <tr>
                 <th>Pola Shift Reguler</th>
-                <td><?= $spl->shift_name; ?> (<?= substr($spl->shift_start, 0, 5); ?> - <?= substr($spl->shift_end, 0, 5); ?> WIB)</td>
+                <td colspan="3"><?= $spl->shift_name; ?> (<?= substr($spl->shift_start, 0, 5); ?> - <?= substr($spl->shift_end, 0, 5); ?> WIB)</td>
             </tr>
         </tbody>
     </table>

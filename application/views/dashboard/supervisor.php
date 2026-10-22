@@ -114,7 +114,7 @@
                         <span class="badge badge-primary font-weight-bold mr-2">PRESENSI MANDIRI SUPERVISOR</span>
                         <small class="text-white-50 font-weight-bold">NIP: <?= $this->session->userdata('nip'); ?> &bull; Jadwal: <?= !empty($my_shift) ? $my_shift->shift_name . ' (' . substr($my_shift->start_time, 0, 5) . ' - ' . substr($my_shift->end_time, 0, 5) . ' WIB)' : 'Reguler'; ?></small>
                     </div>
-                    <h5 class="font-weight-bold mb-0 text-white">Halo, <?= $this->session->userdata('full_name'); ?> (Supervisor)</h5>
+                    <h5 class="font-weight-bold mb-0 text-white">Halo, <?= $this->session->userdata('full_name'); ?> <?= !empty($this->session->userdata('position')) ? '(' . $this->session->userdata('position') . ')' : '(Supervisor)'; ?></h5>
                     <small class="text-white-50">Sebagai pimpinan regu shift, jam kehadiran Anda juga tercatat di sistem presensi pabrik.</small>
                 </div>
             </div>

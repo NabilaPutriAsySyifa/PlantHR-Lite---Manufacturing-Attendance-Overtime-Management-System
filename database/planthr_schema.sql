@@ -40,6 +40,7 @@ CREATE TABLE employees (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nip VARCHAR(20) NOT NULL UNIQUE,
   full_name VARCHAR(120) NOT NULL,
+  position VARCHAR(100) NOT NULL DEFAULT 'Operator Produksi',
   gender ENUM('L', 'P') NOT NULL,
   department_id INT UNSIGNED NOT NULL,
   shift_id INT UNSIGNED NOT NULL,

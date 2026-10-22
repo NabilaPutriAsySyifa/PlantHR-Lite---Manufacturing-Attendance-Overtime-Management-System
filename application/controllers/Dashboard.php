@@ -284,6 +284,7 @@ class Dashboard extends MY_Controller {
 
         $this->form_validation->set_rules('nip', 'NIP', 'required|is_unique[employees.nip]');
         $this->form_validation->set_rules('full_name', 'Nama Lengkap', 'required|trim|max_length[120]');
+        $this->form_validation->set_rules('position', 'Jabatan / Posisi Kerja', 'required|trim|max_length[100]');
         $this->form_validation->set_rules('gender', 'Jenis Kelamin', 'required|in_list[L,P]');
         $this->form_validation->set_rules('department_id', 'Departemen', 'required|numeric');
         $this->form_validation->set_rules('shift_id', 'Shift Kerja', 'required|numeric');
@@ -302,6 +303,7 @@ class Dashboard extends MY_Controller {
         $this->Dashboard_model->insert_employee([
             'nip'           => strtoupper(trim($this->input->post('nip', TRUE))),
             'full_name'     => trim($this->input->post('full_name', TRUE)),
+            'position'      => trim($this->input->post('position', TRUE)),
             'gender'        => $this->input->post('gender', TRUE),
             'department_id' => (int) $this->input->post('department_id', TRUE),
             'shift_id'      => (int) $this->input->post('shift_id', TRUE),
@@ -325,6 +327,7 @@ class Dashboard extends MY_Controller {
         $id = (int) $this->input->post('id', TRUE);
 
         $this->form_validation->set_rules('full_name', 'Nama Lengkap', 'required|trim');
+        $this->form_validation->set_rules('position', 'Jabatan / Posisi Kerja', 'required|trim|max_length[100]');
         $this->form_validation->set_rules('department_id', 'Departemen', 'required|numeric');
         $this->form_validation->set_rules('shift_id', 'Shift Kerja', 'required|numeric');
         $this->form_validation->set_rules('role', 'Peran Pengguna', 'required|in_list[OPERATOR,SUPERVISOR,HR_ADMIN]');
@@ -338,6 +341,7 @@ class Dashboard extends MY_Controller {
 
         $update_data = [
             'full_name'     => trim($this->input->post('full_name', TRUE)),
+            'position'      => trim($this->input->post('position', TRUE)),
             'department_id' => (int) $this->input->post('department_id', TRUE),
             'shift_id'      => (int) $this->input->post('shift_id', TRUE),
             'role'          => $this->input->post('role', TRUE),
@@ -703,7 +707,7 @@ class Dashboard extends MY_Controller {
             echo '<h3>DATA MASTER PERSONIL KARYAWAN PABRIK - PLANTHR LITE</h3>';
             echo '<p><strong>Total Personil:</strong> ' . count($employees) . ' Karyawan | <strong>Dicetak:</strong> ' . date('d/m/Y H:i') . ' WIB</p>';
             echo '<table><thead><tr>';
-            echo '<th>No</th><th>NIP</th><th>Nama Lengkap</th><th>Gender</th><th>Departemen</th><th>Alokasi Shift</th><th>Peran (Role)</th><th>Gaji Pokok (Rp)</th><th>Email Login</th><th>Status Akun</th><th>Terdaftar Pada</th>';
+            echo '<th>No</th><th>NIP</th><th>Nama Lengkap</th><th>Jabatan / Posisi</th><th>Gender</th><th>Departemen</th><th>Alokasi Shift</th><th>Peran (Role)</th><th>Gaji Pokok (Rp)</th><th>Email Login</th><th>Status Akun</th><th>Terdaftar Pada</th>';
             echo '</tr></thead><tbody>';
             $no = 1;
             foreach ($employees as $row) {
@@ -711,6 +715,7 @@ class Dashboard extends MY_Controller {
                 echo '<td class="center">' . $no++ . '</td>';
                 echo '<td class="center"><strong>' . htmlspecialchars($row->nip) . '</strong></td>';
                 echo '<td><strong>' . htmlspecialchars($row->full_name) . '</strong></td>';
+                echo '<td>' . htmlspecialchars(!empty($row->position) ? $row->position : '-') . '</td>';
                 echo '<td class="center">' . ($row->gender === 'L' ? 'Laki-laki' : 'Perempuan') . '</td>';
                 echo '<td>' . htmlspecialchars($row->dept_name) . '</td>';
                 echo '<td>' . htmlspecialchars($row->shift_name) . '</td>';
@@ -737,6 +742,7 @@ class Dashboard extends MY_Controller {
             'No',
             'NIP',
             'Nama Lengkap',
+            'Jabatan / Posisi',
             'Gender',
             'Departemen',
             'Alokasi Shift',
@@ -753,6 +759,7 @@ class Dashboard extends MY_Controller {
                 $no++,
                 $row->nip,
                 $row->full_name,
+                !empty($row->position) ? $row->position : '-',
                 $row->gender === 'L' ? 'Laki-laki' : 'Perempuan',
                 $row->dept_name,
                 $row->shift_name,
