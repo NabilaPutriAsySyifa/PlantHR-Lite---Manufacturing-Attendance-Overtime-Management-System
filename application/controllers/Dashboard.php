@@ -675,6 +675,98 @@ class Dashboard extends MY_Controller {
     }
 
     /**
+     * Ekspor Data Master Karyawan ke CSV / Excel (.xls)
+     */
+    public function export_employees() {
+        $this->allow_roles(['HR_ADMIN']);
+        $format = $this->input->get('format', TRUE);
+
+        $employees = $this->Dashboard_model->get_all_employees();
+
+        if ($format === 'excel') {
+            $filename = "Data_Master_Karyawan_" . date('Ymd_His') . ".xls";
+            header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+            header("Content-Disposition: attachment; filename=" . $filename);
+            header("Pragma: no-cache");
+            header("Expires: 0");
+
+            echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+            echo '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>';
+            echo 'table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 10pt; }';
+            echo 'th { background-color: #1B365D; color: #FFFFFF; font-weight: bold; border: 1px solid #000; padding: 7px; text-align: center; }';
+            echo 'td { border: 1px solid #D0D0D0; padding: 6px; }';
+            echo '.center { text-align: center; }';
+            echo '.num { text-align: right; }';
+            echo '</style></head><body>';
+            echo '<h3>DATA MASTER PERSONIL KARYAWAN PABRIK - PLANTHR LITE</h3>';
+            echo '<p><strong>Total Personil:</strong> ' . count($employees) . ' Karyawan | <strong>Dicetak:</strong> ' . date('d/m/Y H:i') . ' WIB</p>';
+            echo '<table><thead><tr>';
+            echo '<th>No</th><th>NIP</th><th>Nama Lengkap</th><th>Gender</th><th>Departemen</th><th>Alokasi Shift</th><th>Peran (Role)</th><th>Gaji Pokok (Rp)</th><th>Email Login</th><th>Status Akun</th><th>Terdaftar Pada</th>';
+            echo '</tr></thead><tbody>';
+            $no = 1;
+            foreach ($employees as $row) {
+                echo '<tr>';
+                echo '<td class="center">' . $no++ . '</td>';
+                echo '<td class="center"><strong>' . htmlspecialchars($row->nip) . '</strong></td>';
+                echo '<td><strong>' . htmlspecialchars($row->full_name) . '</strong></td>';
+                echo '<td class="center">' . ($row->gender === 'L' ? 'Laki-laki' : 'Perempuan') . '</td>';
+                echo '<td>' . htmlspecialchars($row->dept_name) . '</td>';
+                echo '<td>' . htmlspecialchars($row->shift_name) . '</td>';
+                echo '<td class="center">' . htmlspecialchars($row->role) . '</td>';
+                echo '<td class="num">' . number_format($row->base_salary, 0, ',', '.') . '</td>';
+                echo '<td>' . htmlspecialchars($row->email) . '</td>';
+                echo '<td class="center" style="font-weight: bold; color: ' . ($row->is_active == 1 ? '#2E7D32' : '#C62828') . ';">' . ($row->is_active == 1 ? 'AKTIF' : 'NONAKTIF') . '</td>';
+                echo '<td class="center">' . date('d/m/Y', strtotime($row->created_at)) . '</td>';
+                echo '</tr>';
+            }
+            echo '</tbody></table></body></html>';
+            exit;
+        }
+
+        $filename = "Data_Master_Karyawan_" . date('Ymd_His') . ".csv";
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+
+        $output = fopen('php://output', 'w');
+        fputs($output, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
+        fputcsv($output, [
+            'No',
+            'NIP',
+            'Nama Lengkap',
+            'Gender',
+            'Departemen',
+            'Alokasi Shift',
+            'Peran (Role)',
+            'Gaji Pokok (Rp)',
+            'Email Login',
+            'Status Akun',
+            'Terdaftar Pada'
+        ]);
+
+        $no = 1;
+        foreach ($employees as $row) {
+            fputcsv($output, [
+                $no++,
+                $row->nip,
+                $row->full_name,
+                $row->gender === 'L' ? 'Laki-laki' : 'Perempuan',
+                $row->dept_name,
+                $row->shift_name,
+                $row->role,
+                $row->base_salary,
+                $row->email,
+                $row->is_active == 1 ? 'AKTIF' : 'NONAKTIF',
+                $row->created_at
+            ]);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    /**
      * Hapus Arsip Surat Perintah Lembur (SPL) oleh HR Admin
      */
     public function delete_spl($id) {

@@ -551,7 +551,13 @@
                         <h6 class="font-weight-bold text-dark mb-0"><i class="fas fa-users text-primary mr-1"></i> Data Master Personil Karyawan Pabrik</h6>
                         <small class="text-muted">Master database personil terintegrasi dengan penempatan shift, gaji pokok, dan hak akses sistem.</small>
                     </div>
-                    <div>
+                    <div class="d-flex align-items-center" style="gap: 8px;">
+                        <a href="<?= site_url('dashboard/export_employees?format=excel'); ?>" class="btn btn-success btn-sm font-weight-bold px-3 shadow-sm" title="Unduh Spreadsheet Format Microsoft Excel (.xls)">
+                            <i class="fas fa-file-excel mr-1"></i> Unduh Excel
+                        </a>
+                        <a href="<?= site_url('dashboard/export_employees'); ?>" class="btn btn-outline-success btn-sm font-weight-bold px-2 bg-white shadow-sm" title="Unduh Format CSV Baku">
+                            <i class="fas fa-file-csv mr-1"></i> CSV
+                        </a>
                         <button type="button" class="btn btn-primary btn-sm font-weight-bold px-3 shadow-sm" data-toggle="modal" data-target="#modalAddEmployee">
                             <i class="fas fa-user-plus mr-1"></i> Tambah Karyawan Baru
                         </button>
