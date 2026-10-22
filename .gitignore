@@ -1,0 +1,12 @@
+/vendor/
+user_guide_src/cilexer/
+user_guide_src/annotation/
+build/
+tests/_ci_phpunit_test/
+node_modules/
+.idea/
+.vscode/
+*.sql.gz
+*.log
+.DS_Store
+Thumbs.db
