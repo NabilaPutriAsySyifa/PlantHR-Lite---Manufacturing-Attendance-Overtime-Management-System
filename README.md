@@ -10,6 +10,11 @@
 
 **PlantHR Lite** adalah aplikasi web Human Resources Management System (HRMS) operasional pabrik yang dirancang khusus untuk memecahkan alur kerja manufaktur nyata: pengelolaan roster 3-shift bergilir 24/7 (termasuk shift malam lintas hari), validasi presensi harian otomatis dengan kalkulasi keterlambatan berbasis zona waktu Indonesia Barat (**WIB / Asia/Jakarta**), pengajuan tiket Surat Perintah Lembur (SPL) berjenjang dengan audit trail penolakan, rekapitulasi periode cut-off payroll dengan ekspor ganda (**Excel .xls & CSV**), formulir cetak SPL resmi siap audit, serta utilitas pencadangan database mandiri.
 
+> 🌐 **Live Demo & Akses Publik:**  
+> Uji coba langsung seluruh fitur sistem operasional pabrik ini secara online tanpa perlu instalasi lokal melalui portal resmi:  
+> 🚀 **[Masuk ke Portal | PlantHR Lite](https://epson-thumbzilla-subjects-beach.trycloudflare.com/planthr-lite/auth/login)**  
+> *(Silakan gunakan kredensial login yang tertera pada tabel [Akun Uji Coba Demo](#akun-uji-coba-demo) di bawah).*
+
 ---
 
 ## Pemetaan Masalah Nyata Manufaktur vs Solusi Teknis
@@ -122,6 +127,7 @@ planthr-lite/
 
 ## Akun Uji Coba Demo
 
+Tautan Akses Cepat: 🚀 **[Masuk ke Portal | PlantHR Lite](https://epson-thumbzilla-subjects-beach.trycloudflare.com/planthr-lite/auth/login)**  
 Kata sandi bawaan untuk seluruh akun uji coba adalah: **`admin123`**
 
 | Peran (Role) | Penugasan Shift / Wewenang | Alamat Email |
