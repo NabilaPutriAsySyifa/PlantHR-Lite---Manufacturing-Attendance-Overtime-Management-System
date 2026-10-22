@@ -104,4 +104,114 @@ class Attendance_model extends CI_Model {
             ->get()
             ->result();
     }
+
+    /**
+     * Evaluasi batas waktu (Time Window Auto-Lock) presensi masuk dan pulang berdasarkan shift kerja & SPL lembur
+     */
+    public function get_shift_window_status($employee_id, $shift = null, $active_attendance = null) {
+        if (!$shift) {
+            $shift = $this->get_employee_shift($employee_id);
+        }
+        if (!$shift) {
+            return [
+                'can_clock_in'    => true,
+                'can_clock_out'   => true,
+                'lock_in_reason'  => '',
+                'lock_out_reason' => '',
+                'shift_name'      => 'Shift Standar',
+                'start_time'      => '08:00',
+                'end_time'        => '17:00',
+                'cutoff_in'       => '17:00',
+                'cutoff_out'      => '18:30',
+                'has_approved_ot' => false
+            ];
+        }
+
+        $now_ts = time();
+        $today  = date('Y-m-d');
+        $hour   = (int) date('H');
+
+        // Tentukan batas awal dan akhir shift saat ini
+        if (!empty($shift->is_cross_day)) {
+            // Shift lintas hari (contoh: 23:00 - 07:00)
+            $end_hour = (int) substr($shift->end_time, 0, 2);
+            if ($hour < $end_hour || ($hour == $end_hour && (int)date('i') <= 30)) {
+                // Sesi dini hari / pagi (mulai kemarin malam)
+                $shift_start_ts = strtotime(date('Y-m-d', strtotime('-1 day')) . ' ' . $shift->start_time);
+                $shift_end_ts   = strtotime($today . ' ' . $shift->end_time);
+            } else {
+                // Sesi sore / malam (mulai malam ini)
+                $shift_start_ts = strtotime($today . ' ' . $shift->start_time);
+                $shift_end_ts   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' ' . $shift->end_time);
+            }
+        } else {
+            // Shift reguler hari yang sama (Pagi / Siang / Office)
+            $shift_start_ts = strtotime($today . ' ' . $shift->start_time);
+            $shift_end_ts   = strtotime($today . ' ' . $shift->end_time);
+        }
+
+        // Buka presensi masuk 2 jam sebelum jam masuk shift dimulai
+        $earliest_in_ts = $shift_start_ts - (2 * 3600);
+        // Batas maksimal presensi masuk: tepat saat jam shift berakhir
+        $cutoff_in_ts   = $shift_end_ts;
+
+        // Cek tiket lembur resmi (SPL) yang disetujui untuk hari ini
+        $approved_ot = $this->db->select('*')
+            ->from('overtime_requests')
+            ->where('employee_id', $employee_id)
+            ->where('overtime_date', $today)
+            ->where('status', 'APPROVED')
+            ->order_by('end_time', 'DESC')
+            ->get()
+            ->row();
+
+        // Batas toleransi kepulangan normal: +90 menit (1.5 jam) setelah jam selesai shift
+        $cutoff_out_ts = $shift_end_ts + (90 * 60);
+
+        // Jika ada lembur yang disetujui, perpanjang batas Clock Out hingga +60 menit setelah jam lembur berakhir
+        if ($approved_ot && !empty($approved_ot->end_time)) {
+            $ot_end_ts = strtotime($today . ' ' . $approved_ot->end_time);
+            if (!empty($shift->is_cross_day) && $ot_end_ts < $shift_start_ts) {
+                $ot_end_ts = strtotime(date('Y-m-d', strtotime('+1 day')) . ' ' . $approved_ot->end_time);
+            }
+            if (($ot_end_ts + 3600) > $cutoff_out_ts) {
+                $cutoff_out_ts = $ot_end_ts + 3600;
+            }
+        }
+
+        // Evaluasi Kunci Otomatis Presensi Masuk (Clock In)
+        $can_clock_in = true;
+        $lock_in_reason = '';
+
+        if ($now_ts < $earliest_in_ts) {
+            $can_clock_in = false;
+            $lock_in_reason = 'Presensi masuk belum dibuka. Jam masuk shift Anda adalah ' . date('H:i', $shift_start_ts) . ' WIB (baru dapat diakses mulai pukul ' . date('H:i', $earliest_in_ts) . ' WIB).';
+        } elseif ($now_ts > $cutoff_in_ts) {
+            $can_clock_in = false;
+            $lock_in_reason = 'Akses Presensi Masuk (Clock In) telah dikunci karena jadwal shift Anda (' . $shift->shift_name . ') telah berakhir pada pukul ' . date('H:i', $shift_end_ts) . ' WIB. Anda dinyatakan Tidak Hadir / Mangkir hari ini. Silakan hubungi Supervisor atau HRD jika ada dispensasi dinas.';
+        }
+
+        // Evaluasi Kunci Otomatis Presensi Pulang (Clock Out)
+        $can_clock_out = true;
+        $lock_out_reason = '';
+
+        if ($now_ts > $cutoff_out_ts) {
+            $can_clock_out = false;
+            $lock_out_reason = 'Akses Presensi Pulang (Clock Out) telah dikunci karena telah melewati batas toleransi kepulangan (' . date('H:i', $cutoff_out_ts) . ' WIB). Hubungi Supervisor atau HRD untuk verifikasi pencatatan kepulangan Anda.';
+        }
+
+        return [
+            'can_clock_in'    => $can_clock_in,
+            'can_clock_out'   => $can_clock_out,
+            'lock_in_reason'  => $lock_in_reason,
+            'lock_out_reason' => $lock_out_reason,
+            'shift_name'      => $shift->shift_name,
+            'start_time'      => date('H:i', $shift_start_ts),
+            'end_time'        => date('H:i', $shift_end_ts),
+            'earliest_in'     => date('H:i', $earliest_in_ts),
+            'cutoff_in'       => date('H:i', $cutoff_in_ts),
+            'cutoff_out'      => date('H:i', $cutoff_out_ts),
+            'has_approved_ot' => !empty($approved_ot)
+        ];
+    }
 }

@@ -194,13 +194,58 @@
 
                     <!-- Tombol Aksi Presensi -->
                     <?php if (empty($today_attendance) || empty($today_attendance->clock_in)): ?>
-                        <a href="<?= site_url('dashboard/clock_in'); ?>" class="btn btn-clockin btn-block shadow-sm">
-                            <i class="fas fa-sign-in-alt mr-2"></i> CLOCK IN (MASUK KERJA)
-                        </a>
+                        <?php if (!empty($shift_window) && !$shift_window['can_clock_in']): ?>
+                            <div class="alert alert-warning border border-warning p-3 rounded mb-0 text-left shadow-sm">
+                                <div class="d-flex align-items-center mb-1">
+                                    <span class="badge badge-danger px-2 py-1 mr-2"><i class="fas fa-lock mr-1"></i> DIKUNCI</span>
+                                    <strong class="text-dark small">PRESENSI MASUK TIDAK TERSEDIA</strong>
+                                </div>
+                                <div class="small text-dark mt-1" style="line-height: 1.5;">
+                                    <?= $shift_window['lock_in_reason']; ?>
+                                </div>
+                                <button type="button" class="btn btn-secondary btn-block mt-3 font-weight-bold" disabled>
+                                    <i class="fas fa-lock mr-2"></i> CLOCK IN DIKUNCI (DI LUAR JADWAL SHIFT)
+                                </button>
+                            </div>
+                        <?php else: ?>
+                            <a href="<?= site_url('dashboard/clock_in'); ?>" class="btn btn-clockin btn-block shadow-sm">
+                                <i class="fas fa-sign-in-alt mr-2"></i> CLOCK IN (MASUK KERJA)
+                            </a>
+                            <?php if (!empty($shift_window)): ?>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="far fa-clock mr-1"></i> Jam Shift: <strong><?= $shift_window['start_time']; ?> - <?= $shift_window['end_time']; ?> WIB</strong> &bull; Batas Masuk: <strong><?= $shift_window['cutoff_in']; ?> WIB</strong>
+                                </small>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     <?php elseif (empty($today_attendance->clock_out)): ?>
-                        <a href="<?= site_url('dashboard/clock_out'); ?>" class="btn btn-clockout btn-block shadow-sm" onclick="return confirm('Konfirmasi selesaikan jam kerja hari ini (Clock Out)?');">
-                            <i class="fas fa-sign-out-alt mr-2"></i> CLOCK OUT (SELESAI PULANG)
-                        </a>
+                        <?php if (!empty($shift_window) && !$shift_window['can_clock_out']): ?>
+                            <div class="alert alert-danger border border-danger p-3 rounded mb-0 text-left shadow-sm">
+                                <div class="d-flex align-items-center mb-1">
+                                    <span class="badge badge-danger px-2 py-1 mr-2"><i class="fas fa-lock mr-1"></i> DIKUNCI</span>
+                                    <strong class="text-danger small">PRESENSI PULANG DIKUNCI</strong>
+                                </div>
+                                <div class="small text-dark mt-1" style="line-height: 1.5;">
+                                    <?= $shift_window['lock_out_reason']; ?>
+                                </div>
+                                <button type="button" class="btn btn-secondary btn-block mt-3 font-weight-bold" disabled>
+                                    <i class="fas fa-lock mr-2"></i> CLOCK OUT DIKUNCI (MELEWATI BATAS TOLERANSI)
+                                </button>
+                            </div>
+                        <?php else: ?>
+                            <a href="<?= site_url('dashboard/clock_out'); ?>" class="btn btn-clockout btn-block shadow-sm" onclick="return confirm('Konfirmasi selesaikan jam kerja hari ini (Clock Out)?');">
+                                <i class="fas fa-sign-out-alt mr-2"></i> CLOCK OUT (SELESAI PULANG)
+                            </a>
+                            <?php if (!empty($shift_window)): ?>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="far fa-clock mr-1"></i> Jam Pulang Shift: <strong><?= $shift_window['end_time']; ?> WIB</strong>
+                                    <?php if ($shift_window['has_approved_ot']): ?>
+                                        <span class="badge badge-primary ml-1"><i class="fas fa-business-time mr-1"></i>SPL Lembur Aktif (Toleransi s/d <?= $shift_window['cutoff_out']; ?> WIB)</span>
+                                    <?php else: ?>
+                                        &bull; Toleransi s/d: <strong><?= $shift_window['cutoff_out']; ?> WIB</strong>
+                                    <?php endif; ?>
+                                </small>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     <?php else: ?>
                         <div class="alert alert-success border-0 shadow-sm py-3 m-0 d-flex align-items-center justify-content-center">
                             <i class="fas fa-check-circle fa-2x mr-3 text-success"></i>

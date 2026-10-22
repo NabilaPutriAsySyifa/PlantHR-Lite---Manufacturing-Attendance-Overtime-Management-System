@@ -163,23 +163,47 @@
                         <span class="badge badge-warning text-dark font-weight-bold px-2 py-1"><i class="fas fa-clock mr-1"></i> Belum Presensi Masuk</span>
                         <div class="small text-white-50 mt-1">Waktu Server: <span class="text-warning font-weight-bold font-mono"><?= date('H:i'); ?> WIB</span></div>
                     </div>
-                    <form method="POST" action="<?= site_url('dashboard/clock_in'); ?>" class="m-0">
-                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-                        <button type="submit" class="btn btn-success font-weight-bold px-4 py-2 shadow-sm d-flex align-items-center">
-                            <i class="fas fa-sign-in-alt mr-2 fa-lg"></i> PRESENSI MASUK SEKARANG
-                        </button>
-                    </form>
+                    <?php if (!empty($shift_window) && !$shift_window['can_clock_in']): ?>
+                        <div class="d-flex align-items-center bg-dark p-2 px-3 rounded border border-warning text-left" style="max-width: 340px;">
+                            <i class="fas fa-lock text-warning mr-2 fa-lg"></i>
+                            <div>
+                                <span class="badge badge-warning text-dark font-weight-bold">Presensi Masuk Dikunci</span>
+                                <div class="small text-white-50 mt-1" style="font-size: 11px; line-height: 1.3;">
+                                    Shift <?= $shift_window['shift_name']; ?> berakhir <?= $shift_window['end_time']; ?> WIB.
+                                </div>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <form method="POST" action="<?= site_url('dashboard/clock_in'); ?>" class="m-0">
+                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                            <button type="submit" class="btn btn-success font-weight-bold px-4 py-2 shadow-sm d-flex align-items-center">
+                                <i class="fas fa-sign-in-alt mr-2 fa-lg"></i> PRESENSI MASUK SEKARANG
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 <?php elseif (!empty($my_attendance->clock_in) && empty($my_attendance->clock_out)): ?>
                     <div class="text-lg-right mr-lg-2">
                         <span class="badge badge-success font-weight-bold px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Sedang Bertugas</span>
                         <div class="small text-white-50 mt-1">Masuk: <strong class="text-white font-mono"><?= date('H:i', strtotime($my_attendance->clock_in)); ?> WIB</strong> (<?= $my_attendance->status === 'LATE' ? '<span class="text-warning font-weight-bold">Telat ' . $my_attendance->late_minutes . 'm</span>' : 'Tepat Waktu'; ?>)</div>
                     </div>
-                    <form method="POST" action="<?= site_url('dashboard/clock_out'); ?>" class="m-0">
-                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-                        <button type="submit" class="btn btn-danger font-weight-bold px-4 py-2 shadow-sm d-flex align-items-center">
-                            <i class="fas fa-sign-out-alt mr-2 fa-lg"></i> PRESENSI PULANG (CLOCK OUT)
-                        </button>
-                    </form>
+                    <?php if (!empty($shift_window) && !$shift_window['can_clock_out']): ?>
+                        <div class="d-flex align-items-center bg-dark p-2 px-3 rounded border border-danger text-left" style="max-width: 340px;">
+                            <i class="fas fa-lock text-danger mr-2 fa-lg"></i>
+                            <div>
+                                <span class="badge badge-danger font-weight-bold">Presensi Pulang Dikunci</span>
+                                <div class="small text-white-50 mt-1" style="font-size: 11px; line-height: 1.3;">
+                                    Melewati batas toleransi (<?= $shift_window['cutoff_out']; ?> WIB).
+                                </div>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <form method="POST" action="<?= site_url('dashboard/clock_out'); ?>" class="m-0">
+                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                            <button type="submit" class="btn btn-danger font-weight-bold px-4 py-2 shadow-sm d-flex align-items-center">
+                                <i class="fas fa-sign-out-alt mr-2 fa-lg"></i> PRESENSI PULANG (CLOCK OUT)
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 <?php else: ?>
                     <div class="d-flex align-items-center bg-dark p-2 px-3 rounded border border-secondary">
                         <i class="fas fa-calendar-check text-success mr-2 fa-lg"></i>

@@ -53,6 +53,7 @@ class Dashboard extends MY_Controller {
         $user_id                 = $this->session->userdata('user_id');
         $data['my_attendance']   = $this->Attendance_model->get_active_attendance($user_id);
         $data['my_shift']        = $this->Attendance_model->get_employee_shift($user_id);
+        $data['shift_window']    = $this->Attendance_model->get_shift_window_status($user_id, $data['my_shift'], $data['my_attendance']);
 
         $data['filter_date']     = $filter_date;
         $data['filter_dept']     = $filter_dept;
@@ -80,6 +81,7 @@ class Dashboard extends MY_Controller {
         // Presensi Mandiri Supervisor
         $data['my_attendance']   = $this->Attendance_model->get_active_attendance($user_id);
         $data['my_shift']        = $this->Attendance_model->get_employee_shift($user_id);
+        $data['shift_window']    = $this->Attendance_model->get_shift_window_status($user_id, $data['my_shift'], $data['my_attendance']);
 
         $this->load->view('dashboard/supervisor', $data);
     }
@@ -97,6 +99,7 @@ class Dashboard extends MY_Controller {
         $data['my_attendances']   = $this->Dashboard_model->get_operator_attendances($user_id);
         $data['my_spl_list']      = $this->Overtime_model->get_employee_spl_history($user_id);
         $data['shift']            = $this->Attendance_model->get_employee_shift($user_id);
+        $data['shift_window']     = $this->Attendance_model->get_shift_window_status($user_id, $data['shift'], $data['today_attendance']);
 
         $this->load->view('dashboard/operator', $data);
     }
@@ -121,6 +124,15 @@ class Dashboard extends MY_Controller {
         }
 
         $shift = $this->Attendance_model->get_employee_shift($user_id);
+        $window = $this->Attendance_model->get_shift_window_status($user_id, $shift, $active);
+
+        // Kunci Otomatis (Auto-Lock): Tolak jika di luar jendela waktu shift yang sah
+        if (!$window['can_clock_in']) {
+            $this->session->set_flashdata('error', $window['lock_in_reason']);
+            redirect($redirect_target);
+            return;
+        }
+
         $this->Attendance_model->record_clock_in($user_id, $shift);
 
         $this->session->set_flashdata('success', 'Presensi masuk (Clock In) berhasil dicatat.');
@@ -146,6 +158,16 @@ class Dashboard extends MY_Controller {
 
         if (!empty($active->clock_out)) {
             $this->session->set_flashdata('error', 'Anda sudah melakukan Clock Out sebelumnya.');
+            redirect($redirect_target);
+            return;
+        }
+
+        $shift = $this->Attendance_model->get_employee_shift($user_id);
+        $window = $this->Attendance_model->get_shift_window_status($user_id, $shift, $active);
+
+        // Kunci Otomatis (Auto-Lock): Tolak jika melewati batas toleransi kepulangan
+        if (!$window['can_clock_out']) {
+            $this->session->set_flashdata('error', $window['lock_out_reason']);
             redirect($redirect_target);
             return;
         }
