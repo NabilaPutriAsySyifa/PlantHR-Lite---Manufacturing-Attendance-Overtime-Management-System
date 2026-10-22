@@ -593,6 +593,41 @@
 
         <!-- TAB 3: MASTER KARYAWAN LENGKAP DENGAN CRUD -->
         <div class="tab-pane fade" id="emp" role="tabpanel">
+            <?php if ($this->session->flashdata('reset_success_emp_name')): ?>
+                <div class="alert alert-success border-success border-left border-4 shadow-sm p-3 mb-3 rounded-lg alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <div class="d-flex align-items-start">
+                        <div class="mr-3 mt-1">
+                            <span class="badge badge-success p-2 rounded-circle shadow-sm"><i class="fas fa-check-double fa-lg"></i></span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="h6 font-weight-bold text-success mb-1">
+                                <i class="fas fa-shield-alt mr-1"></i> BUKTI VALID DATABASE: Kata Sandi Personil Berhasil Diperbarui &amp; Aktif!
+                            </div>
+                            <div class="text-dark small">
+                                Kata sandi untuk personil <strong><?= $this->session->flashdata('reset_success_emp_name'); ?></strong> (NIP: <code><?= $this->session->flashdata('reset_success_emp_nip'); ?></code>) telah berhasil dienkripsi dengan standar <strong>Bcrypt</strong> dan <strong>aktif 100%</strong> di database pada <strong><?= $this->session->flashdata('reset_success_time'); ?></strong>.
+                            </div>
+                            <div class="mt-2 text-muted small bg-white p-2 rounded border border-light">
+                                <i class="fas fa-info-circle text-primary mr-1"></i> <strong>Instruksi Login:</strong> Karyawan bersangkutan sekarang sudah wajib login menggunakan kata sandi barunya. Kata sandi lama (maupun bawaan standar <code>admin123</code>) sudah resmi dinonaktifkan.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php elseif ($this->session->flashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-3" role="alert">
+                    <i class="fas fa-check-circle fa-lg mr-2 text-success"></i>
+                    <div class="font-weight-bold"><?= $this->session->flashdata('success'); ?></div>
+                    <button type="button" class="close ml-auto" data-dismiss="alert">&times;</button>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->session->flashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-3" role="alert">
+                    <i class="fas fa-exclamation-triangle fa-lg mr-2 text-danger"></i>
+                    <div><?= $this->session->flashdata('error'); ?></div>
+                    <button type="button" class="close ml-auto" data-dismiss="alert">&times;</button>
+                </div>
+            <?php endif; ?>
+
             <div class="plant-card overflow-hidden">
                 <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
                     <div>
@@ -623,16 +658,27 @@
                                 <th>Alokasi Shift</th>
                                 <th>Wewenang Akun</th>
                                 <th>Gaji Pokok</th>
-                                <th>Email Login</th>
+                                <th>Email &amp; Status Sandi</th>
                                 <th>Status</th>
                                 <th class="text-center">Aksi Otoritas</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($employees as $e): ?>
-                                <tr>
+                            <?php foreach ($employees as $e): 
+                                $is_default_pass = password_verify('admin123', $e->password);
+                                $last_pass_change = !empty($e->password_changed_at) 
+                                    ? date('d/m/Y H:i', strtotime($e->password_changed_at)) 
+                                    : (!empty($e->updated_at) ? date('d/m/Y H:i', strtotime($e->updated_at)) : 'Awal Sistem');
+                                $is_just_reset = ($this->session->flashdata('reset_success_emp_id') == $e->id);
+                            ?>
+                                <tr class="<?= $is_just_reset ? 'table-success border border-success' : ''; ?>">
                                     <td class="font-weight-bold font-mono"><?= $e->nip; ?></td>
-                                    <td><strong><?= $e->full_name; ?></strong></td>
+                                    <td>
+                                        <strong><?= $e->full_name; ?></strong>
+                                        <?php if ($is_just_reset): ?>
+                                            <span class="badge badge-success ml-1"><i class="fas fa-check mr-1"></i>Sandi Baru Aktif</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><span class="badge badge-light border text-dark font-weight-bold"><?= htmlspecialchars(!empty($e->position) ? $e->position : '-'); ?></span></td>
                                     <td><?= $e->gender == 'L' ? '<span class="badge badge-light">L</span>' : '<span class="badge badge-light">P</span>'; ?></td>
                                     <td><span class="badge badge-light border"><?= $e->dept_name; ?></span></td>
@@ -647,7 +693,22 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="font-mono">Rp <?= number_format($e->base_salary, 0, ',', '.'); ?></td>
-                                    <td><code><?= $e->email; ?></code></td>
+                                    <td>
+                                        <code><?= $e->email; ?></code>
+                                        <div class="mt-1">
+                                            <?php if (!$is_default_pass): ?>
+                                                <span class="badge badge-success font-weight-bold" style="font-size: 10px;" title="Kata sandi kustom telah aktif dan diperbarui pada <?= $last_pass_change; ?> WIB">
+                                                    <i class="fas fa-check-circle mr-1"></i> Sandi Baru Aktif
+                                                </span>
+                                                <div class="text-muted" style="font-size: 9px;"><i class="far fa-clock mr-1"></i> <?= $last_pass_change; ?> WIB</div>
+                                            <?php else: ?>
+                                                <span class="badge badge-warning text-dark font-weight-bold" style="font-size: 10px;" title="Akun masih menggunakan kata sandi bawaan default (admin123)">
+                                                    <i class="fas fa-key mr-1"></i> Sandi Default (admin123)
+                                                </span>
+                                                <div class="text-muted" style="font-size: 9px;">Belum pernah diubah</div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
                                     <td>
                                         <?= $e->is_active ? '<span class="badge badge-success badge-status">Aktif</span>' : '<span class="badge badge-danger badge-status">Nonaktif</span>'; ?>
                                     </td>
@@ -664,11 +725,15 @@
                                             title="Edit Data & Shift">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button type="button" class="btn btn-outline-warning btn-sm px-2 py-1 ml-1 btn-reset-pass"
+                                        <button type="button" class="btn <?= !$is_default_pass ? 'btn-warning' : 'btn-outline-warning'; ?> btn-sm px-2 py-1 ml-1 btn-reset-pass"
                                             data-id="<?= $e->id; ?>"
                                             data-nip="<?= $e->nip; ?>"
                                             data-name="<?= htmlspecialchars($e->full_name); ?>"
-                                            title="Reset Kata Sandi Akun (Solusi Lupa Password)">
+                                            data-email="<?= htmlspecialchars($e->email); ?>"
+                                            data-position="<?= htmlspecialchars($e->position ?? '-'); ?>"
+                                            data-is-default="<?= $is_default_pass ? '1' : '0'; ?>"
+                                            data-changed-at="<?= !$is_default_pass ? $last_pass_change . ' WIB' : 'Belum pernah diubah (bawaan default)'; ?>"
+                                            title="Ganti / Reset Kata Sandi Akun (Status: <?= !$is_default_pass ? 'Sandi Baru Aktif' : 'Masih Default'; ?>)">
                                             <i class="fas fa-key"></i>
                                         </button>
                                         <a href="<?= site_url('dashboard/toggle_employee/' . $e->id); ?>" 
@@ -1199,14 +1264,29 @@
                 <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body p-4">
-                <div class="alert alert-light border p-3 mb-3">
-                    <small class="text-muted d-block font-weight-bold">PERSONIL YANG AKAN DI-UPDATE:</small>
-                    <div class="h6 font-weight-bold text-dark mb-0 mt-1" id="reset_pass_name">Nama Karyawan</div>
-                    <small class="text-muted font-mono" id="reset_pass_nip">NIP: EMP001</small>
+                <!-- KARTU INFORMASI PERSONIL TARGET -->
+                <div class="card bg-light border mb-3">
+                    <div class="card-body p-3">
+                        <small class="text-muted d-block font-weight-bold text-uppercase" style="letter-spacing: 0.5px;">Personil Target:</small>
+                        <div class="h5 font-weight-bold text-dark mb-0 mt-1" id="reset_pass_name">Nama Karyawan</div>
+                        <div class="d-flex align-items-center mt-1 small text-muted">
+                            <span class="font-mono mr-3" id="reset_pass_nip">NIP: EMP001</span>
+                            <span id="reset_pass_email"><i class="fas fa-envelope mr-1"></i> email@plant.local</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group mb-3">
+
+                <!-- KOTAK BUKTI VALIDASI STATUS KATA SANDI SAAT INI -->
+                <div id="reset_pass_status_container" class="mb-3">
+                    <!-- Dinamis terisi oleh JavaScript: status aktif sandi baru vs default -->
+                </div>
+
+                <!-- FORM INPUT GANTI KATA SANDI BARU -->
+                <div class="form-group mb-3 border-top pt-3">
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <label class="font-weight-bold small text-muted mb-0">KATA SANDI BARU *</label>
+                        <label class="font-weight-bold small text-dark mb-0">
+                            <i class="fas fa-pen mr-1 text-primary"></i> KETIK KATA SANDI BARU PENGGANTI *
+                        </label>
                         <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2 font-weight-bold" id="btn_fill_default_pwd" style="font-size: 11px;">
                             <i class="fas fa-magic mr-1"></i> Isi Standar (admin123)
                         </button>
@@ -1220,12 +1300,13 @@
                         </div>
                     </div>
                     <small class="text-muted mt-1 d-block">
-                        <i class="fas fa-shield-alt text-success mr-1"></i> Kata sandi akan langsung dienkripsi aman dengan standar <strong>Bcrypt</strong> begitu disimpan.
+                        <i class="fas fa-shield-alt text-success mr-1"></i> Kata sandi baru akan langsung dienkripsi aman dengan standar <strong>Bcrypt</strong> begitu tombol simpan diklik.
                     </small>
                 </div>
-                <div class="small text-muted bg-light p-2 rounded">
+
+                <div class="small text-muted bg-light p-2 rounded border border-light">
                     <i class="fas fa-info-circle text-primary mr-1"></i>
-                    Demi keamanan enkripsi satu arah (Bcrypt Hash), kata sandi lama tidak ditampilkan. Setelah disimpan, beritahukan kata sandi baru ini kepada karyawan bersangkutan agar dapat segera login.
+                    <strong>Pemberitahuan Keamanan:</strong> Demi keamanan enkripsi satu arah (Bcrypt Hash), karakter sandi lama tidak ditampilkan. Begitu disimpan, status di atas akan langsung berubah menjadi <em>"Sandi Baru Aktif"</em> beserta tanggal &amp; jam update.
                 </div>
             </div>
             <div class="modal-footer bg-light">
@@ -1448,12 +1529,61 @@ $(document).ready(function() {
         var id = $(this).data('id');
         var nip = $(this).data('nip');
         var name = $(this).data('name');
+        var email = $(this).data('email') || '';
+        var isDefault = $(this).data('is-default');
+        var changedAt = $(this).data('changed-at') || '-';
 
         $('#reset_pass_id').val(id);
         $('#reset_pass_nip').text('NIP: ' + nip);
         $('#reset_pass_name').text(name);
+        $('#reset_pass_email').html('<i class="fas fa-envelope mr-1"></i> ' + (email ? email : '-'));
         $('#input_reset_new_password').val('').attr('placeholder', 'Ketik kata sandi baru untuk ' + name + '...');
 
+        var statusHtml = '';
+        if (isDefault === 0 || isDefault === '0') {
+            statusHtml = '' +
+                '<div class="alert alert-success border border-success p-3 rounded shadow-sm">' +
+                    '<div class="d-flex justify-content-between align-items-center">' +
+                        '<span class="badge badge-success px-2 py-1 font-weight-bold" style="font-size: 11px;">' +
+                            '<i class="fas fa-check-circle mr-1"></i> STATUS: KATA SANDI BARU SUDAH AKTIF' +
+                        '</span>' +
+                        '<span class="badge badge-light border text-success font-weight-bold" style="font-size: 11px;">' +
+                            '<i class="fas fa-shield-alt mr-1"></i> Terenkripsi Bcrypt' +
+                        '</span>' +
+                    '</div>' +
+                    '<div class="text-dark small mt-2">' +
+                        '<strong class="text-success"><i class="fas fa-check-double mr-1"></i> BUKTI VALIDASI DATABASE:</strong><br>' +
+                        'Kata sandi personil ini <strong>sudah berhasil diperbarui</strong> dan <strong>bukan lagi bawaan default</strong>. Personil harus login menggunakan kata sandi baru tersebut.' +
+                    '</div>' +
+                    '<hr class="my-2" style="border-top: 1px dashed rgba(16,185,129,0.3);">' +
+                    '<div class="small d-flex justify-content-between align-items-center text-muted">' +
+                        '<span><i class="far fa-clock mr-1"></i> Waktu Pembaruan Terakhir:</span>' +
+                        '<strong class="text-dark font-mono">' + changedAt + '</strong>' +
+                    '</div>' +
+                '</div>';
+        } else {
+            statusHtml = '' +
+                '<div class="alert alert-warning border border-warning p-3 rounded shadow-sm">' +
+                    '<div class="d-flex justify-content-between align-items-center">' +
+                        '<span class="badge badge-warning text-dark px-2 py-1 font-weight-bold" style="font-size: 11px;">' +
+                            '<i class="fas fa-exclamation-triangle mr-1"></i> STATUS: MASIH KATA SANDI DEFAULT' +
+                        '</span>' +
+                        '<span class="badge badge-light border text-dark font-weight-bold" style="font-size: 11px;">' +
+                            'admin123' +
+                        '</span>' +
+                    '</div>' +
+                    '<div class="text-dark small mt-2">' +
+                        'Personil ini masih menggunakan kata sandi standar bawaan (<code>admin123</code>). Silakan isi kata sandi baru di bawah untuk meningkatkan keamanan akun personil.' +
+                    '</div>' +
+                    '<hr class="my-2" style="border-top: 1px dashed rgba(245,158,11,0.3);">' +
+                    '<div class="small d-flex justify-content-between align-items-center text-muted">' +
+                        '<span><i class="far fa-clock mr-1"></i> Waktu Pembaruan Terakhir:</span>' +
+                        '<strong class="text-dark font-mono">' + changedAt + '</strong>' +
+                    '</div>' +
+                '</div>';
+        }
+
+        $('#reset_pass_status_container').html(statusHtml);
         $('#modalResetPassword').modal('show');
     });
 

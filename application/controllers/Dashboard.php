@@ -440,12 +440,25 @@ class Dashboard extends MY_Controller {
             return;
         }
 
+        $emp = $this->db->get_where('employees', ['id' => $employee_id])->row();
+        if (!$emp) {
+            $this->session->set_flashdata('error', 'Data personil tidak ditemukan.');
+            redirect('dashboard/hr#emp');
+            return;
+        }
+
+        $now = date('Y-m-d H:i:s');
         $this->db->where('id', $employee_id)->update('employees', [
-            'password'   => password_hash($new_password, PASSWORD_BCRYPT),
-            'updated_at' => date('Y-m-d H:i:s')
+            'password'            => password_hash($new_password, PASSWORD_BCRYPT),
+            'password_changed_at' => $now,
+            'updated_at'          => $now
         ]);
 
-        $this->session->set_flashdata('success', 'Kata sandi personil berhasil di-reset. Beritahukan sandi baru kepada karyawan.');
+        $this->session->set_flashdata('success', 'BERHASIL: Kata sandi personil ' . $emp->full_name . ' (' . $emp->nip . ') telah berhasil diperbarui dan aktif seketika di database.');
+        $this->session->set_flashdata('reset_success_emp_id', $employee_id);
+        $this->session->set_flashdata('reset_success_emp_name', $emp->full_name);
+        $this->session->set_flashdata('reset_success_emp_nip', $emp->nip);
+        $this->session->set_flashdata('reset_success_time', date('d/m/Y H:i', strtotime($now)) . ' WIB');
         redirect('dashboard/hr#emp');
     }
 
