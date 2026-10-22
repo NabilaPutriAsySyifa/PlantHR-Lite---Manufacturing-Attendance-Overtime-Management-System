@@ -5,6 +5,10 @@ class MY_Controller extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        date_default_timezone_set('Asia/Jakarta');
+        if (isset($this->db)) {
+            $this->db->query("SET time_zone = '+07:00'");
+        }
     }
 
     protected function check_auth() {
