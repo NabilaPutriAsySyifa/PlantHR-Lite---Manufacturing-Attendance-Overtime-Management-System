@@ -65,26 +65,6 @@
             transform: translateY(-1px);
             box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.35);
         }
-        .quick-role-btn {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 8px 10px;
-            text-align: left;
-            transition: all 0.15s ease;
-            cursor: pointer;
-            width: 100%;
-        }
-        .quick-role-btn:hover {
-            background: #eff6ff;
-            border-color: #bfdbfe;
-        }
-        .badge-role {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 6px;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body class="d-flex align-items-center py-4">
@@ -139,41 +119,7 @@
                     </button>
                 </form>
 
-                <!-- Quick Test Login Buttons -->
-                <div class="mt-4 pt-3 border-top">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <small class="font-weight-bold text-dark"><i class="fas fa-key text-warning mr-1"></i> Akun Pengujian Cepat:</small>
-                        <small class="badge badge-light border text-muted">Pass: admin123</small>
-                    </div>
-                    
-                    <div class="d-flex flex-column" style="gap: 6px;">
-                        <button type="button" class="quick-role-btn d-flex justify-content-between align-items-center" onclick="quickFill('rian@plant.local')">
-                            <div>
-                                <span class="font-weight-bold text-dark small d-block">Rian Hidayat</span>
-                                <small class="text-muted">rian@plant.local</small>
-                            </div>
-                            <span class="badge badge-success badge-role">OPERATOR</span>
-                        </button>
-
-                        <button type="button" class="quick-role-btn d-flex justify-content-between align-items-center" onclick="quickFill('spv@plant.local')">
-                            <div>
-                                <span class="font-weight-bold text-dark small d-block">Asep Suhendar</span>
-                                <small class="text-muted">spv@plant.local</small>
-                            </div>
-                            <span class="badge badge-primary badge-role">SUPERVISOR</span>
-                        </button>
-
-                        <button type="button" class="quick-role-btn d-flex justify-content-between align-items-center" onclick="quickFill('hr@plant.local')">
-                            <div>
-                                <span class="font-weight-bold text-dark small d-block">Budi Santoso</span>
-                                <small class="text-muted">hr@plant.local</small>
-                            </div>
-                            <span class="badge badge-dark badge-role">HR ADMIN</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="text-center mt-3 text-muted" style="font-size: 11px;">
+                <div class="text-center mt-4 pt-2 text-muted border-top" style="font-size: 11px;">
                     &copy; <?= date('Y'); ?> PlantHR Lite &bull; 3-Shift Manufacturing HRMS
                 </div>
             </div>
@@ -217,13 +163,5 @@
 <!-- Local Scripts for Modal & Interactions -->
 <script src="<?= base_url('assets/js/jquery.min.js'); ?>"></script>
 <script src="<?= base_url('assets/js/bootstrap.bundle.min.js'); ?>"></script>
-
-<script>
-function quickFill(email) {
-    document.getElementById('inputEmail').value = email;
-    document.getElementById('inputPassword').value = 'admin123';
-    document.getElementById('loginForm').submit();
-}
-</script>
 </body>
 </html>
