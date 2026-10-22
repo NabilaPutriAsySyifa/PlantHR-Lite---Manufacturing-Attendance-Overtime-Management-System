@@ -90,9 +90,23 @@ Dashboard HR Admin dilengkapi 4 grafik analitik bisnis terpadu:
 * **Master Karyawan:** Tambah karyawan baru, edit informasi personil, alokasi rotasi shift kerja, status aktif/nonaktif, reset kata sandi akun karyawan, serta ekspor data ke Excel & CSV.
 * **Departemen Dinamis:** HR Admin dapat menambahkan departemen baru secara interaktif (baik divisi lini pabrik maupun kantor pendukung seperti Procurement, SCM, Finance) lengkap dengan kode unik dan nama divisi.
 
-### 7. Database Maintenance & Backup Otomatis
+### 7. Database Maintenance, Backup Otomatis, & Disaster Recovery
 * **Web Backup Tool (Windows / XAMPP):** Pemanfaatan pustaka native PHP `CI_DB_utility` untuk mengekstraksi cadangan data terkompresi (`.sql.gz`) langsung dari panel HR Admin hanya dengan sekali klik di browser.
 * **Linux Shell Script (`scripts/auto_backup.sh`):** Skrip shell mandiri berbasis `mysqldump` dengan kompresi gzip dan kebijakan rotasi pembersihan berkas berumur lebih dari 7 hari, siap dieksekusi terjadwal via Cron jika aplikasi di-deploy pada VPS/Cloud Server Linux.
+* **Emergency Admin Password Reset Tool (`scripts/reset_admin.php`):** Alat CLI darurat bagi Tim IT / Database Administrator untuk mereset kata sandi HR Administrator langsung dari konsol terminal server dalam 1 detik tanpa perlu membuka peramban web.
+
+---
+
+## Tata Kelola Akun & Penanganan Lupa Sandi (SOP Pabrik)
+
+Sistem HRMS terintegrasi langsung dengan data sensitif Payroll dan Upah Lembur resmi, sehingga pendaftaran dan pemulihan akun diatur secara berjenjang (*Hierarchical RBAC*):
+
+| Skenario Kasus | Pihak Penanggung Jawab | Prosedur Solusi Teknis |
+|---|---|---|
+| **1. Karyawan / SPV Lupa Sandi** | **HR Administrator** | Karyawan melapor NIP ke kantor HRD. HR Admin membuka tab *Master Karyawan* dan menekan tombol kuning `[Reset Password]` untuk mengembalikan sandi ke default (`admin123`). |
+| **2. HR Admin Lupa Sandi (Darurat)** | **Tim IT / Sysadmin Server** | Tim IT mengeksekusi alat pemulihan darurat di terminal server: `php scripts/reset_admin.php hr@plant.local admin123` untuk memulihkan akun dalam 1 detik. |
+| **3. Pendaftaran Akun Karyawan Baru** | **HR Administrator** | HR Admin mendaftarkan personil resmi melalui tombol `[+ Tambah Karyawan Baru]` di tab *Master Karyawan* (mencegah pendaftaran ilegal oleh pihak luar). |
+| **4. Inisialisasi Hari-0 (Fresh Install)** | **Tim IT / DevOps** | Akun admin default terpasang otomatis via *database seeder* (`planthr_schema.sql`): `hr@plant.local` / `admin123`. |
 
 ---
 
@@ -124,7 +138,8 @@ planthr-lite/
 │   ├── planthr_schema.sql        # Skema DDL tabel relasional dan data seeder
 │   └── planthr_db_dump.sql       # MySQL dump siap pakai (UTF-8)
 └── scripts/
-    └── auto_backup.sh            # Skrip bash cadangan MySQL untuk server Linux / Cron
+    ├── auto_backup.sh            # Skrip bash cadangan MySQL untuk server Linux / Cron
+    └── reset_admin.php           # Alat CLI darurat reset sandi HR Admin oleh Tim IT
 ```
 
 ---

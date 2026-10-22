@@ -127,33 +127,70 @@
     </div>
 </div>
 
-<!-- Modal Panduan Lupa Kata Sandi (SOP Pabrik) -->
+<!-- Modal Panduan Lupa Kata Sandi (SOP Tata Kelola Akun Pabrik) -->
 <div class="modal fade" id="modalForgotPassword" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-primary text-white">
-                <h6 class="modal-title font-weight-bold"><i class="fas fa-key mr-2"></i> Bantuan Lupa Kata Sandi Akun Pabrik</h6>
+                <h6 class="modal-title font-weight-bold"><i class="fas fa-shield-alt mr-2"></i> SOP Bantuan Akun &amp; Pemulihan Kata Sandi</h6>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body p-4 text-center">
-                <div class="mb-3">
-                    <span class="rounded-circle bg-light p-3 d-inline-block text-primary">
-                        <i class="fas fa-user-shield fa-2x"></i>
+            <div class="modal-body p-4">
+                <div class="text-center mb-3">
+                    <span class="rounded-circle bg-light p-3 d-inline-block text-primary shadow-sm mb-2">
+                        <i class="fas fa-user-lock fa-2x"></i>
                     </span>
+                    <h5 class="font-weight-bold text-dark mb-1">Tata Kelola Akses &amp; Pemulihan Akun Pabrik</h5>
+                    <p class="text-muted small mb-0">Sistem HRMS terintegrasi dengan Payroll resmi, sehingga reset akun diatur secara berjenjang (RBAC):</p>
                 </div>
-                <h6 class="font-weight-bold text-dark mb-2">Prosedur Reset Kata Sandi (SOP Pabrik)</h6>
-                <p class="text-muted small text-left mb-3">
-                    Untuk menjaga keamanan data operasional pabrik dan integritas data log absensi karyawan, reset kata sandi dilakukan secara terpusat oleh <strong>Divisi HR / Administrator Sistem Pabrik</strong>:
-                </p>
-                <div class="alert alert-light border text-left small mb-3">
-                    <ol class="pl-3 mb-0" style="line-height: 1.8;">
-                        <li>Hubungi <strong>Divisi HRD</strong> atau <strong>Supervisor Lini</strong> Anda dengan menyebutkan <strong>NIP</strong> dan <strong>Nama Lengkap</strong>.</li>
-                        <li>HR Administrator akan membuka panel <strong>Master Karyawan</strong> dan mereset kata sandi akun Anda (misal ke sandi standar <code>admin123</code> atau sandi baru yang disepakati).</li>
-                        <li>Setelah direset, Anda dapat langsung login kembali ke portal ini.</li>
-                    </ol>
+
+                <div class="row">
+                    <!-- Skenario 1: Karyawan & Supervisor -->
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="border rounded p-3 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge badge-success px-2 py-1 mr-2"><i class="fas fa-user mr-1"></i> Karyawan &amp; SPV</span>
+                                <strong class="small text-dark">Lupa Sandi / Email</strong>
+                            </div>
+                            <small class="text-muted d-block mb-2">Ditangani langsung oleh <strong>Divisi HRD</strong>:</small>
+                            <ol class="small text-dark pl-3 mb-0" style="line-height: 1.8;">
+                                <li>Karyawan cukup menyebutkan <strong>NIP</strong> dan <strong>Nama Lengkap</strong> ke kantor HRD / Supervisor.</li>
+                                <li>HR Administrator membuka menu <strong>Master Karyawan</strong> di portal.</li>
+                                <li>HRD menekan tombol kuning <i class="fas fa-key text-warning"></i> <strong>Reset Password</strong> untuk mengembalikan sandi ke default (<code>admin123</code>).</li>
+                                <li>Karyawan langsung dapat login kembali seketika.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Skenario 2: HR Administrator -->
+                    <div class="col-md-6">
+                        <div class="border rounded p-3 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge badge-dark px-2 py-1 mr-2"><i class="fas fa-user-shield mr-1"></i> HR Administrator</span>
+                                <strong class="small text-dark">Pemulihan Darurat (Disaster Recovery)</strong>
+                            </div>
+                            <small class="text-muted d-block mb-2">Ditangani oleh <strong>Tim IT / Sysadmin</strong>:</small>
+                            <ol class="small text-dark pl-3 mb-0" style="line-height: 1.8;">
+                                <li>Jika akun HR Admin terkunci, hubungi <strong>Tim IT / Database Administrator</strong>.</li>
+                                <li>Tim IT mengeksekusi alat darurat di terminal server:
+                                    <code class="d-block mt-1 p-1 bg-white border rounded text-primary">php scripts/reset_admin.php</code>
+                                </li>
+                                <li>Sandi HR Admin langsung tereset menjadi <code>admin123</code> dalam 1 detik tanpa perlu membuka web.</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary btn-block btn-sm font-weight-bold" data-dismiss="modal">
-                    Saya Mengerti
+
+                <div class="alert alert-info border-0 mt-3 mb-0 small d-flex align-items-center">
+                    <i class="fas fa-info-circle fa-lg mr-2 flex-shrink-0 text-info"></i>
+                    <div>
+                        <strong>Inisialisasi Sistem Baru (Day-0):</strong> Pendaftaran seluruh akun karyawan dikelola terpusat oleh HR Administrator melalui menu <strong>Master Karyawan</strong> guna mencegah pendaftaran ilegal yang dapat memanipulasi absensi dan upah lembur.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light py-2">
+                <button type="button" class="btn btn-primary btn-sm font-weight-bold px-4" data-dismiss="modal">
+                    Saya Paham &amp; Tutup
                 </button>
             </div>
         </div>
