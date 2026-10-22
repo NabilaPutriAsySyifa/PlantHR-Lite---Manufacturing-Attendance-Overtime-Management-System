@@ -198,7 +198,7 @@
             <div class="metric-card d-flex align-items-center justify-content-between">
                 <div>
                     <span class="small font-weight-bold text-muted d-block">TOTAL KARYAWAN PABRIK</span>
-                    <h3 class="font-weight-bold text-primary mb-0 mt-1"><?= $summary['total_employees']; ?></h3>
+                    <h3 class="font-weight-bold text-primary mb-0 mt-1" id="metric_total_employees"><?= $summary['total_employees']; ?></h3>
                     <small class="text-muted font-weight-bold">Personil Aktif Terdaftar</small>
                 </div>
                 <div class="p-3 bg-primary text-white rounded-circle shadow-sm">
@@ -211,7 +211,7 @@
             <div class="metric-card d-flex align-items-center justify-content-between">
                 <div>
                     <span class="small font-weight-bold text-muted d-block">DIVISI OPERASIONAL</span>
-                    <h3 class="font-weight-bold text-info mb-0 mt-1"><?= $summary['total_dept']; ?></h3>
+                    <h3 class="font-weight-bold text-info mb-0 mt-1" id="metric_total_dept"><?= $summary['total_dept']; ?></h3>
                     <small class="text-muted font-weight-bold"><?= $summary['total_shifts']; ?> Pola Shift Kerja (24/7)</small>
                 </div>
                 <div class="p-3 bg-info text-white rounded-circle shadow-sm">
@@ -224,8 +224,8 @@
             <div class="metric-card d-flex align-items-center justify-content-between">
                 <div>
                     <span class="small font-weight-bold text-muted d-block">HADIR SHIFT HARI INI</span>
-                    <h3 class="font-weight-bold text-success mb-0 mt-1"><?= $summary['today_present']; ?></h3>
-                    <small class="<?= $summary['today_late'] > 0 ? 'text-danger font-weight-bold' : 'text-success font-weight-bold'; ?>">
+                    <h3 class="font-weight-bold text-success mb-0 mt-1" id="metric_today_present"><?= $summary['today_present']; ?></h3>
+                    <small id="metric_today_late_text" class="<?= $summary['today_late'] > 0 ? 'text-danger font-weight-bold' : 'text-success font-weight-bold'; ?>">
                         <?= $summary['today_late'] > 0 ? $summary['today_late'] . ' Terlambat Masuk' : '100% Tepat Waktu'; ?>
                     </small>
                 </div>
@@ -239,7 +239,7 @@
             <div class="metric-card d-flex align-items-center justify-content-between">
                 <div>
                     <span class="small font-weight-bold text-muted d-block">TIKET SPL PENDING</span>
-                    <h3 class="font-weight-bold text-warning mb-0 mt-1"><?= $summary['pending_spl']; ?></h3>
+                    <h3 class="font-weight-bold text-warning mb-0 mt-1" id="metric_pending_spl"><?= $summary['pending_spl']; ?></h3>
                     <small class="text-muted font-weight-bold">Menunggu Review SPV</small>
                 </div>
                 <div class="p-3 bg-warning text-white rounded-circle shadow-sm">
@@ -261,9 +261,14 @@
                         </h6>
                         <small class="text-muted">Perbandingan personil hadir tepat waktu versus terlambat masuk shift.</small>
                     </div>
-                    <span class="badge badge-light border text-dark font-weight-bold px-2 py-1">
-                        Tingkat Disiplin Hari Ini: <span class="text-success"><?= $summary['on_time_rate']; ?>%</span>
-                    </span>
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-light border text-dark font-weight-bold px-2 py-1">
+                            Tingkat Disiplin Hari Ini: <span class="text-success" id="metric_on_time_rate"><?= $summary['on_time_rate']; ?>%</span>
+                        </span>
+                        <span class="badge badge-light border text-muted font-weight-normal px-2 py-1 ml-2" id="liveSyncBadge" title="Data disinkronkan otomatis dari database secara berkala">
+                            <i class="fas fa-circle text-success mr-1 fa-xs"></i><span id="liveSyncTime">Live Sync</span>
+                        </span>
+                    </div>
                 </div>
                 <div style="height: 250px;">
                     <canvas id="attendanceTrendChart"></canvas>
@@ -1193,10 +1198,15 @@ $(document).ready(function() {
         $('#modalResetPassword').modal('show');
     });
 
+    var chartTrend = null;
+    var chartOt = null;
+    var chartShift = null;
+    var chartOtCost = null;
+
     // Inisialisasi Chart 1: Tren Kehadiran 7 Hari Terakhir
     var trendCtx = document.getElementById('attendanceTrendChart');
     if (trendCtx) {
-        new Chart(trendCtx.getContext('2d'), {
+        chartTrend = new Chart(trendCtx.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: <?= json_encode($trend_7days['labels']); ?>,
@@ -1242,7 +1252,7 @@ $(document).ready(function() {
     // Inisialisasi Chart 2: Distribusi Lembur per Departemen
     var otCtx = document.getElementById('otDistributionChart');
     if (otCtx) {
-        new Chart(otCtx.getContext('2d'), {
+        chartOt = new Chart(otCtx.getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: <?= json_encode($ot_dist['labels']); ?>,
@@ -1269,7 +1279,7 @@ $(document).ready(function() {
     // Inisialisasi Chart 3: Komposisi Personil per Shift Kerja
     var shiftCtx = document.getElementById('shiftDistributionChart');
     if (shiftCtx) {
-        new Chart(shiftCtx.getContext('2d'), {
+        chartShift = new Chart(shiftCtx.getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: <?= json_encode($shift_dist['labels']); ?>,
@@ -1303,7 +1313,7 @@ $(document).ready(function() {
     // Inisialisasi Chart 4: Estimasi Biaya Upah Lembur (Rp) per Departemen
     var otCostCtx = document.getElementById('otCostDistributionChart');
     if (otCostCtx) {
-        new Chart(otCostCtx.getContext('2d'), {
+        chartOtCost = new Chart(otCostCtx.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: <?= json_encode($ot_cost_dist['labels']); ?>,
@@ -1358,6 +1368,74 @@ $(document).ready(function() {
             }
         });
     }
+
+    // Live-Sync Real-Time Polling (100% Data Riil Database MySQL via Ajax)
+    function syncLiveAnalytics() {
+        $.ajax({
+            url: '<?= site_url("dashboard/api_live_analytics"); ?>',
+            type: 'GET',
+            dataType: 'json',
+            success: function(res) {
+                if (res && res.status === 'success') {
+                    // 1. Update Metrik Ringkasan Atas
+                    if (res.summary) {
+                        $('#metric_total_employees').text(res.summary.total_employees);
+                        $('#metric_total_dept').text(res.summary.total_dept);
+                        $('#metric_today_present').text(res.summary.today_present);
+                        $('#metric_pending_spl').text(res.summary.pending_spl);
+                        $('#metric_on_time_rate').text(res.summary.on_time_rate + '%');
+                        
+                        var lateText = res.summary.today_late > 0 
+                            ? res.summary.today_late + ' Terlambat Masuk' 
+                            : '100% Tepat Waktu';
+                        $('#metric_today_late_text').text(lateText)
+                            .removeClass('text-danger text-success')
+                            .addClass(res.summary.today_late > 0 ? 'text-danger' : 'text-success');
+                    }
+
+                    // 2. Update Chart 1: Tren Kehadiran
+                    if (chartTrend && res.trend_7days) {
+                        chartTrend.data.labels = res.trend_7days.labels;
+                        chartTrend.data.datasets[0].data = res.trend_7days.on_time;
+                        chartTrend.data.datasets[1].data = res.trend_7days.late;
+                        chartTrend.update();
+                    }
+
+                    // 3. Update Chart 2: Distribusi Jam Lembur
+                    if (chartOt && res.ot_dist) {
+                        chartOt.data.labels = res.ot_dist.labels;
+                        chartOt.data.datasets[0].data = res.ot_dist.data;
+                        chartOt.update();
+                    }
+
+                    // 4. Update Chart 3: Komposisi Shift
+                    if (chartShift && res.shift_dist) {
+                        chartShift.data.labels = res.shift_dist.labels;
+                        chartShift.data.datasets[0].data = res.shift_dist.data;
+                        chartShift.update();
+                    }
+
+                    // 5. Update Chart 4: Biaya Upah Lembur PP 35/2021
+                    if (chartOtCost && res.ot_cost_dist) {
+                        chartOtCost.data.labels = res.ot_cost_dist.labels;
+                        chartOtCost.data.datasets[0].data = res.ot_cost_dist.data;
+                        chartOtCost.update();
+                    }
+
+                    // Update timestamp badge
+                    if (res.timestamp) {
+                        $('#liveSyncTime').text('Sync: ' + res.timestamp);
+                    }
+                }
+            },
+            error: function() {
+                $('#liveSyncTime').text('Offline');
+            }
+        });
+    }
+
+    // Interval sinkronisasi otomatis tiap 25 detik (tanpa refresh halaman)
+    setInterval(syncLiveAnalytics, 25000);
 
     // Hash navigation retention (auto switch to tab if anchor in url)
     var hash = window.location.hash;

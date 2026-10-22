@@ -813,4 +813,33 @@ class Dashboard extends MY_Controller {
         $this->session->set_flashdata('success', 'Departemen baru (' . $dept_code . ' - ' . $dept_name . ') berhasil ditambahkan ke master pabrik.');
         redirect('dashboard/hr#dept');
     }
+
+    /**
+     * Endpoint API JSON untuk Live-Sync Real-Time Dashboard HR
+     * Mengambil 100% data riil dari database (Summary metrik & 4 grafik analitik)
+     */
+    public function api_live_analytics() {
+        $this->allow_roles(['HR_ADMIN']);
+
+        $summary      = $this->Dashboard_model->get_hr_summary();
+        $trend_7days  = $this->Dashboard_model->get_7days_attendance_trend();
+        $ot_dist      = $this->Dashboard_model->get_overtime_distribution_by_dept();
+        $shift_dist   = $this->Dashboard_model->get_shift_distribution();
+        $ot_cost_dist = $this->Dashboard_model->get_overtime_cost_by_dept();
+
+        $response = [
+            'status'       => 'success',
+            'timestamp'    => date('H:i:s') . ' WIB',
+            'summary'      => $summary,
+            'trend_7days'  => $trend_7days,
+            'ot_dist'      => $ot_dist,
+            'shift_dist'   => $shift_dist,
+            'ot_cost_dist' => $ot_cost_dist
+        ];
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($response));
+    }
 }
