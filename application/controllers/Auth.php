@@ -28,7 +28,7 @@ class Auth extends MY_Controller {
             $password = $this->input->post('password');
             $user = $this->Auth_model->get_user_by_email($email);
 
-            if ($user && (password_verify($password, $user->password) || $password === 'admin123')) {
+            if ($user && password_verify($password, $user->password)) {
                 $this->session->set_userdata([
                     'user_id'       => $user->id,
                     'nip'           => $user->nip,

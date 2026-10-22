@@ -1192,31 +1192,46 @@
 <div class="modal fade" id="modalResetPassword" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form method="POST" action="<?= site_url('dashboard/reset_password'); ?>" class="modal-content border-0 shadow">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
             <input type="hidden" name="employee_id" id="reset_pass_id">
             <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title font-weight-bold"><i class="fas fa-key mr-2"></i> Reset Kata Sandi Personil</h5>
+                <h5 class="modal-title font-weight-bold"><i class="fas fa-key mr-2"></i> Ganti / Reset Kata Sandi Personil</h5>
                 <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body p-4">
                 <div class="alert alert-light border p-3 mb-3">
-                    <small class="text-muted d-block font-weight-bold">PERSONIL YANG AKAN DI-RESET:</small>
+                    <small class="text-muted d-block font-weight-bold">PERSONIL YANG AKAN DI-UPDATE:</small>
                     <div class="h6 font-weight-bold text-dark mb-0 mt-1" id="reset_pass_name">Nama Karyawan</div>
                     <small class="text-muted font-mono" id="reset_pass_nip">NIP: EMP001</small>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="font-weight-bold small text-muted">KATA SANDI BARU *</label>
-                    <input type="text" name="new_password" class="form-control" value="admin123" required minlength="6">
-                    <small class="text-muted">Standar reset bawaan: <code>admin123</code> (dapat diubah sesuai kebutuhan).</small>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="font-weight-bold small text-muted mb-0">KATA SANDI BARU *</label>
+                        <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2 font-weight-bold" id="btn_fill_default_pwd" style="font-size: 11px;">
+                            <i class="fas fa-magic mr-1"></i> Isi Standar (admin123)
+                        </button>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" name="new_password" id="input_reset_new_password" class="form-control font-mono" placeholder="Ketik kata sandi baru (minimal 6 karakter)..." required minlength="6">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" id="btn_toggle_reset_pwd" title="Sembunyikan/Tampilkan Sandi">
+                                <i class="fas fa-eye" id="icon_toggle_reset_pwd"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <small class="text-muted mt-1 d-block">
+                        <i class="fas fa-shield-alt text-success mr-1"></i> Kata sandi akan langsung dienkripsi aman dengan standar <strong>Bcrypt</strong> begitu disimpan.
+                    </small>
                 </div>
                 <div class="small text-muted bg-light p-2 rounded">
                     <i class="fas fa-info-circle text-primary mr-1"></i>
-                    Setelah disimpan, beritahukan kata sandi baru ini kepada karyawan bersangkutan agar dapat segera login kembali.
+                    Demi keamanan enkripsi satu arah (Bcrypt Hash), kata sandi lama tidak ditampilkan. Setelah disimpan, beritahukan kata sandi baru ini kepada karyawan bersangkutan agar dapat segera login.
                 </div>
             </div>
             <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-warning font-weight-bold text-dark px-4">
-                    <i class="fas fa-check mr-1"></i> Simpan &amp; Reset Sandi
+                <button type="submit" class="btn btn-warning font-weight-bold text-dark px-4 shadow-sm">
+                    <i class="fas fa-check mr-1"></i> Simpan Kata Sandi Baru
                 </button>
             </div>
         </form>
@@ -1437,8 +1452,25 @@ $(document).ready(function() {
         $('#reset_pass_id').val(id);
         $('#reset_pass_nip').text('NIP: ' + nip);
         $('#reset_pass_name').text(name);
+        $('#input_reset_new_password').val('').attr('placeholder', 'Ketik kata sandi baru untuk ' + name + '...');
 
         $('#modalResetPassword').modal('show');
+    });
+
+    $('#btn_fill_default_pwd').on('click', function() {
+        $('#input_reset_new_password').val('admin123').focus();
+    });
+
+    $('#btn_toggle_reset_pwd').on('click', function() {
+        var input = $('#input_reset_new_password');
+        var icon = $('#icon_toggle_reset_pwd');
+        if (input.attr('type') === 'password') {
+            input.attr('type', 'text');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        } else {
+            input.attr('type', 'password');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        }
     });
 
     // Event delegation untuk modal hapus karyawan permanen
