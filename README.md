@@ -12,7 +12,7 @@
 
 > 🌐 **Live Demo & Akses Publik:**  
 > Uji coba langsung seluruh fitur sistem operasional pabrik ini secara online tanpa perlu instalasi lokal melalui portal resmi:  
-> 🚀 **[Masuk ke Portal | PlantHR Lite](https://epson-thumbzilla-subjects-beach.trycloudflare.com/planthr-lite/auth/login)**  
+> 🚀 **[Masuk ke Portal | PlantHR Lite](https://zum-bonus-pour-html.trycloudflare.com/planthr-lite/auth/login)**  
 > *(Silakan gunakan kredensial login yang tertera pada tabel [Akun Uji Coba Demo](#akun-uji-coba-demo) di bawah).*
 
 ---
@@ -156,7 +156,7 @@ planthr-lite/
 
 ## Akun Uji Coba Demo
 
-Tautan Akses Cepat: 🚀 **[Masuk ke Portal | PlantHR Lite](https://epson-thumbzilla-subjects-beach.trycloudflare.com/planthr-lite/auth/login)**  
+Tautan Akses Cepat: 🚀 **[Masuk ke Portal | PlantHR Lite](https://zum-bonus-pour-html.trycloudflare.com/planthr-lite/auth/login)**  
 Kata sandi bawaan untuk seluruh akun uji coba adalah: **`admin123`**
 
 | Peran (Role) | Divisi & Penugasan Shift / Wewenang | Alamat Email |
