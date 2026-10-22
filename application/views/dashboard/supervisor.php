@@ -76,7 +76,7 @@
         <div class="navbar-nav ml-auto align-items-center flex-row">
             <span class="navbar-text mr-3 text-white">
                 <i class="fas fa-user-tie text-info mr-1"></i> <?= $this->session->userdata('full_name'); ?>
-                <span class="badge badge-primary font-weight-bold ml-1">Supervisor</span>
+                <span class="badge badge-primary font-weight-bold ml-1">Atasan / Supervisor</span>
             </span>
             <a href="<?= site_url('auth/logout'); ?>" class="btn btn-outline-light btn-sm font-weight-bold px-3">
                 <i class="fas fa-sign-out-alt mr-1"></i> Keluar
@@ -111,11 +111,11 @@
                 </div>
                 <div>
                     <div class="d-flex align-items-center mb-1">
-                        <span class="badge badge-primary font-weight-bold mr-2">PRESENSI MANDIRI SUPERVISOR</span>
+                        <span class="badge badge-primary font-weight-bold mr-2">PORTAL ATASAN &amp; SUPERVISOR</span>
                         <small class="text-white-50 font-weight-bold">NIP: <?= $this->session->userdata('nip'); ?> &bull; Jadwal: <?= !empty($my_shift) ? $my_shift->shift_name . ' (' . substr($my_shift->start_time, 0, 5) . ' - ' . substr($my_shift->end_time, 0, 5) . ' WIB)' : 'Reguler'; ?></small>
                     </div>
                     <h5 class="font-weight-bold mb-0 text-white">Halo, <?= $this->session->userdata('full_name'); ?> <?= !empty($this->session->userdata('position')) ? '(' . $this->session->userdata('position') . ')' : '(Supervisor)'; ?></h5>
-                    <small class="text-white-50">Sebagai pimpinan regu shift, jam kehadiran Anda juga tercatat di sistem presensi pabrik.</small>
+                    <small class="text-white-50">Sebagai atasan &amp; pimpinan regu kerja, jam kehadiran Anda juga tercatat di sistem presensi pabrik.</small>
                 </div>
             </div>
             
@@ -423,7 +423,7 @@
                             Alasan Penolakan Resmi <span class="text-danger">*</span>
                         </label>
                         <textarea name="rejection_note" class="form-control" rows="3" placeholder="Tuliskan alasan penolakan secara jelas (contoh: Kapasitas shift malam sudah terpenuhi)..." required></textarea>
-                        <small class="text-muted">Catatan ini akan langsung tampil di portal operator pemohon.</small>
+                        <small class="text-muted">Catatan ini akan langsung tampil di portal staf/karyawan pemohon.</small>
                     </div>
                 </div>
                 <div class="modal-footer bg-light py-2">

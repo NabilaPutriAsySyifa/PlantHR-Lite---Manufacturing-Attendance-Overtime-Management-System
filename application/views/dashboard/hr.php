@@ -96,7 +96,7 @@
         <div class="navbar-nav ml-auto align-items-center flex-row">
             <span class="navbar-text mr-3 text-white">
                 <i class="fas fa-user-shield text-warning mr-1"></i> <?= $this->session->userdata('full_name'); ?>
-                <span class="badge badge-warning text-dark font-weight-bold ml-1">HR Admin</span>
+                <span class="badge badge-warning text-dark font-weight-bold ml-1">Administrator Utama</span>
             </span>
             <a href="<?= site_url('auth/logout'); ?>" class="btn btn-outline-danger btn-sm font-weight-bold px-3">
                 <i class="fas fa-sign-out-alt mr-1"></i> Keluar
@@ -137,7 +137,7 @@
         </div>
     </div>
 
-    <!-- Presensi Mandiri HR Admin (Self-Service Attendance) -->
+    <!-- Presensi Mandiri Administrator Utama (Self-Service Attendance) -->
     <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #fff;">
         <div class="card-body p-3 p-md-4 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between" style="gap: 15px;">
             <div class="d-flex align-items-center">
@@ -146,11 +146,11 @@
                 </div>
                 <div>
                     <div class="d-flex align-items-center mb-1">
-                        <span class="badge badge-primary font-weight-bold mr-2">PRESENSI MANDIRI ANDA</span>
+                        <span class="badge badge-primary font-weight-bold mr-2">PRESENSI MANDIRI ADMINISTRATOR</span>
                         <small class="text-white-50 font-weight-bold">NIP: <?= $this->session->userdata('nip'); ?> &bull; Jadwal: <?= !empty($my_shift) ? $my_shift->shift_name . ' (' . substr($my_shift->start_time, 0, 5) . ' - ' . substr($my_shift->end_time, 0, 5) . ' WIB)' : 'Reguler'; ?></small>
                     </div>
-                    <h5 class="font-weight-bold mb-0 text-white">Halo, <?= $this->session->userdata('full_name'); ?> (HR Administrator)</h5>
-                    <small class="text-white-50">Sebagai staf HRD, kehadiran Anda juga tercatat di sistem presensi pabrik secara akuntabel.</small>
+                    <h5 class="font-weight-bold mb-0 text-white">Halo, <?= $this->session->userdata('full_name'); ?> <?= !empty($this->session->userdata('position')) ? '(' . $this->session->userdata('position') . ')' : '(Administrator Utama)'; ?></h5>
+                    <small class="text-white-50">Sebagai Administrator Utama / Pengelola HR, kehadiran Anda juga tercatat di sistem presensi pabrik secara akuntabel.</small>
                 </div>
             </div>
             

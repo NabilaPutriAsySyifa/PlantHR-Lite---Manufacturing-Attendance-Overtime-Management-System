@@ -145,37 +145,37 @@
                 </div>
 
                 <div class="row">
-                    <!-- Skenario 1: Karyawan & Supervisor -->
+                    <!-- Skenario 1: Staf, Karyawan & Supervisor -->
                     <div class="col-md-6 mb-3 mb-md-0">
                         <div class="border rounded p-3 h-100 bg-light">
                             <div class="d-flex align-items-center mb-2">
-                                <span class="badge badge-success px-2 py-1 mr-2"><i class="fas fa-user mr-1"></i> Karyawan &amp; SPV</span>
+                                <span class="badge badge-success px-2 py-1 mr-2"><i class="fas fa-user mr-1"></i> Staf / Karyawan &amp; SPV</span>
                                 <strong class="small text-dark">Lupa Sandi / Email</strong>
                             </div>
                             <small class="text-muted d-block mb-2">Ditangani langsung oleh <strong>Divisi HRD</strong>:</small>
                             <ol class="small text-dark pl-3 mb-0" style="line-height: 1.8;">
                                 <li>Karyawan cukup menyebutkan <strong>NIP</strong> dan <strong>Nama Lengkap</strong> ke kantor HRD / Supervisor.</li>
-                                <li>HR Administrator membuka menu <strong>Master Karyawan</strong> di portal.</li>
+                                <li>Administrator Utama membuka menu <strong>Master Karyawan</strong> di portal.</li>
                                 <li>HRD menekan tombol kuning <i class="fas fa-key text-warning"></i> <strong>Reset Password</strong> untuk mengembalikan sandi ke default (<code>admin123</code>).</li>
                                 <li>Karyawan langsung dapat login kembali seketika.</li>
                             </ol>
                         </div>
                     </div>
 
-                    <!-- Skenario 2: HR Administrator -->
+                    <!-- Skenario 2: Administrator Utama -->
                     <div class="col-md-6">
                         <div class="border rounded p-3 h-100 bg-light">
                             <div class="d-flex align-items-center mb-2">
-                                <span class="badge badge-dark px-2 py-1 mr-2"><i class="fas fa-user-shield mr-1"></i> HR Administrator</span>
+                                <span class="badge badge-dark px-2 py-1 mr-2"><i class="fas fa-user-shield mr-1"></i> Administrator Utama</span>
                                 <strong class="small text-dark">Pemulihan Darurat (Disaster Recovery)</strong>
                             </div>
                             <small class="text-muted d-block mb-2">Ditangani oleh <strong>Tim IT / Sysadmin</strong>:</small>
                             <ol class="small text-dark pl-3 mb-0" style="line-height: 1.8;">
-                                <li>Jika akun HR Admin terkunci, hubungi <strong>Tim IT / Database Administrator</strong>.</li>
+                                <li>Jika akun Administrator Utama terkunci, hubungi <strong>Tim IT / Database Administrator</strong>.</li>
                                 <li>Tim IT mengeksekusi alat darurat di terminal server:
                                     <code class="d-block mt-1 p-1 bg-white border rounded text-primary">php scripts/reset_admin.php</code>
                                 </li>
-                                <li>Sandi HR Admin langsung tereset menjadi <code>admin123</code> dalam 1 detik tanpa perlu membuka web.</li>
+                                <li>Sandi Administrator Utama langsung tereset menjadi <code>admin123</code> dalam 1 detik tanpa perlu membuka web.</li>
                             </ol>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                 <div class="alert alert-info border-0 mt-3 mb-0 small d-flex align-items-center">
                     <i class="fas fa-info-circle fa-lg mr-2 flex-shrink-0 text-info"></i>
                     <div>
-                        <strong>Inisialisasi Sistem Baru (Day-0):</strong> Pendaftaran seluruh akun karyawan dikelola terpusat oleh HR Administrator melalui menu <strong>Master Karyawan</strong> guna mencegah pendaftaran ilegal yang dapat memanipulasi absensi dan upah lembur.
+                        <strong>Inisialisasi Sistem Baru (Day-0):</strong> Pendaftaran seluruh akun karyawan dikelola terpusat oleh Administrator Utama (HR) melalui menu <strong>Master Karyawan</strong> guna mencegah pendaftaran ilegal yang dapat memanipulasi absensi dan upah lembur.
                     </div>
                 </div>
             </div>

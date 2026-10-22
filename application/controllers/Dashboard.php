@@ -34,7 +34,7 @@ class Dashboard extends MY_Controller {
             $cutoff_end = date('Y-m-d');
         }
 
-        $data['title']           = 'Dashboard HR Administrator';
+        $data['title']           = 'Portal Administrator Utama (HR & Manajemen)';
         $data['summary']         = $this->Dashboard_model->get_hr_summary();
         $data['attendances']     = $this->Dashboard_model->get_filtered_attendances($filter_date, $filter_dept);
         $data['employees']       = $this->Dashboard_model->get_all_employees();
@@ -64,7 +64,7 @@ class Dashboard extends MY_Controller {
     }
 
     /**
-     * Dashboard Supervisor
+     * Dashboard Atasan / Supervisor
      * Verifikasi pengajuan lembur tim, riwayat keputusan, dan monitoring kehadiran bawahan
      */
     public function supervisor() {
@@ -72,7 +72,7 @@ class Dashboard extends MY_Controller {
         $user_id       = $this->session->userdata('user_id');
         $department_id = $this->session->userdata('department_id') ? $this->session->userdata('department_id') : 1;
 
-        $data['title']            = 'Dashboard Verifikasi Supervisor';
+        $data['title']            = 'Portal Atasan & Supervisor (Verifikasi Lembur)';
         $data['pending_spl']      = $this->Dashboard_model->get_pending_spl();
         $data['decision_history'] = $this->Overtime_model->get_supervisor_decision_history($user_id, 25);
         $data['team_members']     = $this->Dashboard_model->get_supervisor_team($department_id);
@@ -85,14 +85,14 @@ class Dashboard extends MY_Controller {
     }
 
     /**
-     * Portal Presensi Karyawan (Employee Self-Service / ESS)
+     * Portal Staf & Karyawan (Employee Self-Service / ESS)
      * Presensi mandiri (Shift Pagi/Sore/Malam lintas hari) & Pengajuan SPL
      */
     public function operator() {
         $this->allow_roles(['OPERATOR']);
         $user_id = $this->session->userdata('user_id');
 
-        $data['title']            = 'Portal Presensi Karyawan (ESS)';
+        $data['title']            = 'Portal Staf & Karyawan (Presensi Mandiri & SPL)';
         $data['today_attendance'] = $this->Attendance_model->get_active_attendance($user_id);
         $data['my_attendances']   = $this->Dashboard_model->get_operator_attendances($user_id);
         $data['my_spl_list']      = $this->Overtime_model->get_employee_spl_history($user_id);

@@ -100,8 +100,8 @@
         </a>
         <div class="navbar-nav ml-auto align-items-center flex-row">
             <div class="d-none d-sm-block text-right mr-3 text-white">
-                <div class="font-weight-bold small text-white"><?= $this->session->userdata('full_name'); ?></div>
-                <small class="text-info font-weight-bold"><i class="fas fa-id-badge mr-1"></i><?= $this->session->userdata('nip'); ?> &bull; <?= $this->session->userdata('shift_name'); ?></small>
+                <div class="font-weight-bold small text-white"><?= $this->session->userdata('full_name'); ?> <span class="badge badge-info font-weight-bold ml-1">Staf / Karyawan</span></div>
+                <small class="text-white-50"><i class="fas fa-id-badge mr-1"></i><?= $this->session->userdata('nip'); ?> &bull; <?= $this->session->userdata('shift_name'); ?></small>
             </div>
             <a href="<?= site_url('auth/logout'); ?>" class="btn btn-outline-danger btn-sm font-weight-bold px-3">
                 <i class="fas fa-sign-out-alt mr-1"></i> Keluar
@@ -131,7 +131,7 @@
     <div class="plant-card p-3 p-md-4 mb-4 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
         <div class="mb-3 mb-md-0">
             <span class="badge badge-primary px-2 py-1 mb-2 font-weight-bold">
-                <i class="fas fa-id-card-alt mr-1"></i> PORTAL PRESENSI KARYAWAN (EMPLOYEE SELF-SERVICE)
+                <i class="fas fa-id-card-alt mr-1"></i> PORTAL STAF &amp; KARYAWAN (PRESENSI MANDIRI &amp; SPL)
             </span>
             <h4 class="font-weight-bold text-dark m-0">Selamat Datang, <?= $this->session->userdata('full_name'); ?></h4>
             <p class="text-muted small mb-0 mt-1">
@@ -141,7 +141,7 @@
                 <?php endif; ?>
             </p>
             <small class="text-info font-weight-bold d-block mt-1">
-                <i class="fas fa-info-circle mr-1"></i> Berlaku untuk staf seluruh lini: Produksi, Maintenance &amp; Engineering (Teknisi), Quality Control (QC), &amp; Warehouse/Logistik.
+                <i class="fas fa-info-circle mr-1"></i> Berlaku untuk staf seluruh lini divisi: Finance, Supply Chain (SCM), Produksi, QC, Maintenance, Warehouse/Logistik, dll.
             </small>
         </div>
         <div class="text-md-right">
