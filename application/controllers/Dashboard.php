@@ -390,6 +390,43 @@ class Dashboard extends MY_Controller {
     }
 
     /**
+     * Hapus Data Karyawan (Cegah Duplikasi / Salah Input)
+     */
+    public function delete_employee() {
+        $this->allow_roles(['HR_ADMIN']);
+        $employee_id = (int) $this->input->post('employee_id');
+
+        if ($employee_id <= 0) {
+            $this->session->set_flashdata('error', 'ID karyawan tidak valid.');
+            redirect('dashboard/hr#emp');
+            return;
+        }
+
+        // Proteksi: Cegah menghapus akun yang sedang login sendiri
+        if ($employee_id === (int) $this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif digunakan.');
+            redirect('dashboard/hr#emp');
+            return;
+        }
+
+        $emp = $this->db->get_where('employees', ['id' => $employee_id])->row();
+        if (!$emp) {
+            $this->session->set_flashdata('error', 'Data karyawan tidak ditemukan.');
+            redirect('dashboard/hr#emp');
+            return;
+        }
+
+        $deleted_name = $emp->full_name;
+        $deleted_nip  = $emp->nip;
+
+        // Eksekusi penghapusan (relasi absensi & SPL terhapus bersih secara cascade)
+        $this->db->where('id', $employee_id)->delete('employees');
+
+        $this->session->set_flashdata('success', 'Data personil ' . $deleted_name . ' (' . $deleted_nip . ') berhasil dihapus secara permanen.');
+        redirect('dashboard/hr#emp');
+    }
+
+    /**
      * Solusi Lupa Password: Reset Kata Sandi Karyawan oleh HR Administrator
      */
     public function reset_password() {

@@ -677,6 +677,19 @@
                                             title="<?= $e->is_active ? 'Nonaktifkan Akun' : 'Aktifkan Akun'; ?>">
                                             <i class="fas fa-power-off"></i>
                                         </a>
+                                        <?php if ($e->id != $this->session->userdata('user_id')): ?>
+                                            <button type="button" class="btn btn-outline-danger btn-sm px-2 py-1 ml-1 btn-delete-emp"
+                                                data-id="<?= $e->id; ?>"
+                                                data-nip="<?= $e->nip; ?>"
+                                                data-name="<?= htmlspecialchars($e->full_name); ?>"
+                                                title="Hapus Data Karyawan (Cegah Duplikasi)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1 ml-1" disabled title="Akun Anda Sendiri (Sedang Digunakan)">
+                                                <i class="fas fa-lock"></i>
+                                            </button>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -1210,6 +1223,42 @@
     </div>
 </div>
 
+<!-- MODAL HAPUS DATA KARYAWAN (CEGAH DUPLIKAT) -->
+<div class="modal fade" id="modalDeleteEmployee" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form method="POST" action="<?= site_url('dashboard/delete_employee'); ?>" class="modal-content border-0 shadow">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+            <input type="hidden" name="employee_id" id="delete_emp_id">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title font-weight-bold"><i class="fas fa-trash-alt mr-2"></i> Konfirmasi Hapus Data Karyawan</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-warning py-2 px-3 small border-0 mb-3 d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle fa-2x text-warning mr-3 flex-shrink-0"></i>
+                    <div>
+                        <strong>Peringatan Penghapusan Permanen:</strong> Tindakan ini akan menghapus data karyawan dari database (termasuk riwayat absensi &amp; permohonan lembur terkait) guna mencegah terjadinya duplikasi data.
+                    </div>
+                </div>
+                <div class="card bg-light border p-3 mb-3">
+                    <small class="text-muted font-weight-bold d-block mb-1">DATA PERSONIL YANG AKAN DIHAPUS:</small>
+                    <div class="h5 font-weight-bold text-danger mb-0" id="delete_emp_name">Nama Karyawan</div>
+                    <small class="text-muted font-mono" id="delete_emp_nip">NIP: EMP000</small>
+                </div>
+                <p class="small text-muted mb-0">
+                    Apakah Anda yakin 100% ingin menghapus data personil ini secara permanen dari sistem pabrik?
+                </p>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary font-weight-bold px-3" data-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-danger font-weight-bold px-4 shadow-sm">
+                    <i class="fas fa-trash-alt mr-1"></i> Ya, Hapus Permanen
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- MODAL TAMBAH DEPARTEMEN BARU -->
 <div class="modal fade" id="modalAddDepartment" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1390,6 +1439,19 @@ $(document).ready(function() {
         $('#reset_pass_name').text(name);
 
         $('#modalResetPassword').modal('show');
+    });
+
+    // Event delegation untuk modal hapus karyawan permanen
+    $('.btn-delete-emp').on('click', function() {
+        var id = $(this).data('id');
+        var nip = $(this).data('nip');
+        var name = $(this).data('name');
+
+        $('#delete_emp_id').val(id);
+        $('#delete_emp_nip').text('NIP: ' + nip);
+        $('#delete_emp_name').text(name);
+
+        $('#modalDeleteEmployee').modal('show');
     });
 
     var chartTrend = null;
