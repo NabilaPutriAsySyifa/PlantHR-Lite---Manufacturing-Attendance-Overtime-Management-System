@@ -282,6 +282,16 @@ class Dashboard extends MY_Controller {
     public function add_employee() {
         $this->allow_roles(['HR_ADMIN']);
 
+        // Resolusi posisi dari opsi OTHER (manual) atau preset
+        $pos = trim($this->input->post('position', TRUE));
+        $pos_select = trim($this->input->post('position_select', TRUE));
+        $custom_pos = trim($this->input->post('custom_position', TRUE));
+        if ($pos_select === 'OTHER' && !empty($custom_pos)) {
+            $_POST['position'] = $custom_pos;
+        } elseif (empty($pos) && !empty($pos_select) && $pos_select !== 'OTHER') {
+            $_POST['position'] = $pos_select;
+        }
+
         $this->form_validation->set_rules('nip', 'NIP', 'required|is_unique[employees.nip]');
         $this->form_validation->set_rules('full_name', 'Nama Lengkap', 'required|trim|max_length[120]');
         $this->form_validation->set_rules('position', 'Jabatan / Posisi Kerja', 'required|trim|max_length[100]');
@@ -325,6 +335,16 @@ class Dashboard extends MY_Controller {
     public function edit_employee() {
         $this->allow_roles(['HR_ADMIN']);
         $id = (int) $this->input->post('id', TRUE);
+
+        // Resolusi posisi dari opsi OTHER (manual) atau preset
+        $pos = trim($this->input->post('position', TRUE));
+        $pos_select = trim($this->input->post('position_select', TRUE));
+        $custom_pos = trim($this->input->post('custom_position', TRUE));
+        if ($pos_select === 'OTHER' && !empty($custom_pos)) {
+            $_POST['position'] = $custom_pos;
+        } elseif (empty($pos) && !empty($pos_select) && $pos_select !== 'OTHER') {
+            $_POST['position'] = $pos_select;
+        }
 
         $this->form_validation->set_rules('full_name', 'Nama Lengkap', 'required|trim');
         $this->form_validation->set_rules('position', 'Jabatan / Posisi Kerja', 'required|trim|max_length[100]');

@@ -958,25 +958,37 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="font-weight-bold small text-dark"><i class="fas fa-briefcase text-primary mr-1"></i> JABATAN / POSISI KERJA (JOB TITLE) *</label>
-                        <input type="text" name="position" class="form-control" list="job_positions_add" placeholder="Pilih atau ketik jabatan riil di pabrik..." required maxlength="100">
-                        <datalist id="job_positions_add">
-                            <option value="Operator Mesin Produksi">
-                            <option value="Teknisi Maintenance & Engineering">
-                            <option value="Staff Quality Control (QC / QA)">
-                            <option value="Staff Warehouse & Logistik">
-                            <option value="Operator Forklift & Material Handler">
-                            <option value="Staff PPIC & Production Planning">
-                            <option value="Foreman / Line Leader Produksi">
-                            <option value="Supervisor Maintenance">
-                            <option value="Staff Human Resources & GA">
-                            <option value="Staff Procurement & Purchasing">
-                            <option value="Staff Finance & Accounting">
-                            <option value="Petugas Keamanan / Security">
-                            <option value="Driver Logistik Operasional">
-                            <option value="Helper & Cleaning Service">
-                        </datalist>
-                        <small class="text-muted"><i class="fas fa-info-circle text-info mr-1"></i>Posisi/jobdesk nyata (bisa dipilih atau diketik bebas).</small>
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-briefcase text-primary mr-1"></i> JABATAN / POSISI KERJA (JOBDESK) *</label>
+                        <select name="position_select" id="add_position_select" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih Posisi / Jabatan Pabrik --</option>
+                            <option value="Operator Mesin Produksi">Operator Mesin Produksi</option>
+                            <option value="Teknisi Maintenance & Kelistrikan">Teknisi Maintenance & Kelistrikan</option>
+                            <option value="Staff Quality Control (QC / QA)">Staff Quality Control (QC / QA)</option>
+                            <option value="Staff Warehouse & Logistik">Staff Warehouse & Logistik</option>
+                            <option value="Operator Forklift & Material Handler">Operator Forklift & Material Handler</option>
+                            <option value="Staff PPIC & Production Planning">Staff PPIC & Production Planning</option>
+                            <option value="Foreman / Line Leader Produksi">Foreman / Line Leader Produksi</option>
+                            <option value="Supervisor Maintenance">Supervisor Maintenance</option>
+                            <option value="Staff Human Resources & GA">Staff Human Resources & GA</option>
+                            <option value="Staff Procurement & Purchasing">Staff Procurement & Purchasing</option>
+                            <option value="Staff Finance & Accounting">Staff Finance & Accounting</option>
+                            <option value="Petugas Keamanan / Security">Petugas Keamanan / Security</option>
+                            <option value="Driver Logistik Operasional">Driver Logistik Operasional</option>
+                            <option value="Helper & Cleaning Service">Helper & Cleaning Service</option>
+                            <option value="OTHER" class="text-primary font-weight-bold bg-light">➕ Lainnya / Other (Tulis Manual Sendiri...)</option>
+                        </select>
+                        
+                        <!-- Kolom input manual yang otomatis muncul jika memilih "OTHER" -->
+                        <div id="add_custom_position_wrapper" class="mt-2" style="display: none;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white font-weight-bold"><i class="fas fa-pen mr-1"></i> Ketik Manual:</span>
+                                </div>
+                                <input type="text" name="custom_position" id="add_custom_position" class="form-control" placeholder="Contoh: Operator CNC / Drafter / Staf Pajak" maxlength="100">
+                            </div>
+                            <small class="text-success font-weight-bold mt-1 d-block"><i class="fas fa-check-circle mr-1"></i>Bebas tuliskan nama posisi / jobdesk apa pun sesuai kebutuhan pabrik Anda.</small>
+                        </div>
+                        <input type="hidden" name="position" id="add_final_position">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">JENIS KELAMIN *</label>
@@ -1069,24 +1081,37 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="font-weight-bold small text-dark"><i class="fas fa-briefcase text-primary mr-1"></i> JABATAN / POSISI KERJA (JOB TITLE) *</label>
-                        <input type="text" name="position" id="edit_position" class="form-control" list="job_positions_edit" placeholder="Ketik atau pilih jabatan..." required maxlength="100">
-                        <datalist id="job_positions_edit">
-                            <option value="Operator Mesin Produksi">
-                            <option value="Teknisi Maintenance & Engineering">
-                            <option value="Staff Quality Control (QC / QA)">
-                            <option value="Staff Warehouse & Logistik">
-                            <option value="Operator Forklift & Material Handler">
-                            <option value="Staff PPIC & Production Planning">
-                            <option value="Foreman / Line Leader Produksi">
-                            <option value="Supervisor Maintenance">
-                            <option value="Staff Human Resources & GA">
-                            <option value="Staff Procurement & Purchasing">
-                            <option value="Staff Finance & Accounting">
-                            <option value="Petugas Keamanan / Security">
-                            <option value="Driver Logistik Operasional">
-                            <option value="Helper & Cleaning Service">
-                        </datalist>
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-briefcase text-primary mr-1"></i> JABATAN / POSISI KERJA (JOBDESK) *</label>
+                        <select name="position_select" id="edit_position_select" class="form-control" required>
+                            <option value="" disabled>-- Pilih Posisi / Jabatan Pabrik --</option>
+                            <option value="Operator Mesin Produksi">Operator Mesin Produksi</option>
+                            <option value="Teknisi Maintenance & Kelistrikan">Teknisi Maintenance & Kelistrikan</option>
+                            <option value="Staff Quality Control (QC / QA)">Staff Quality Control (QC / QA)</option>
+                            <option value="Staff Warehouse & Logistik">Staff Warehouse & Logistik</option>
+                            <option value="Operator Forklift & Material Handler">Operator Forklift & Material Handler</option>
+                            <option value="Staff PPIC & Production Planning">Staff PPIC & Production Planning</option>
+                            <option value="Foreman / Line Leader Produksi">Foreman / Line Leader Produksi</option>
+                            <option value="Supervisor Maintenance">Supervisor Maintenance</option>
+                            <option value="Staff Human Resources & GA">Staff Human Resources & GA</option>
+                            <option value="Staff Procurement & Purchasing">Staff Procurement & Purchasing</option>
+                            <option value="Staff Finance & Accounting">Staff Finance & Accounting</option>
+                            <option value="Petugas Keamanan / Security">Petugas Keamanan / Security</option>
+                            <option value="Driver Logistik Operasional">Driver Logistik Operasional</option>
+                            <option value="Helper & Cleaning Service">Helper & Cleaning Service</option>
+                            <option value="OTHER" class="text-primary font-weight-bold bg-light">➕ Lainnya / Other (Tulis Manual Sendiri...)</option>
+                        </select>
+                        
+                        <!-- Kolom input manual untuk Edit jika memilih "OTHER" -->
+                        <div id="edit_custom_position_wrapper" class="mt-2" style="display: none;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white font-weight-bold"><i class="fas fa-pen mr-1"></i> Ketik Manual:</span>
+                                </div>
+                                <input type="text" name="custom_position" id="edit_custom_position" class="form-control" placeholder="Contoh: Operator CNC / Drafter / Staf Pajak" maxlength="100">
+                            </div>
+                            <small class="text-success font-weight-bold mt-1 d-block"><i class="fas fa-check-circle mr-1"></i>Bebas tuliskan nama posisi / jobdesk apa pun sesuai kebutuhan pabrik Anda.</small>
+                        </div>
+                        <input type="hidden" name="position" id="edit_final_position">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">DEPARTEMEN / DIVISI *</label>
@@ -1211,6 +1236,38 @@
 
 <script>
 $(document).ready(function() {
+    // Toggle input manual "OTHER" pada Modal Tambah Karyawan
+    $('#add_position_select').on('change', function() {
+        if ($(this).val() === 'OTHER') {
+            $('#add_custom_position_wrapper').slideDown(150);
+            $('#add_custom_position').prop('required', true).focus();
+            $('#add_final_position').val($('#add_custom_position').val());
+        } else {
+            $('#add_custom_position_wrapper').slideUp(150);
+            $('#add_custom_position').prop('required', false).val('');
+            $('#add_final_position').val($(this).val());
+        }
+    });
+    $('#add_custom_position').on('input', function() {
+        $('#add_final_position').val($(this).val());
+    });
+
+    // Toggle input manual "OTHER" pada Modal Edit Karyawan
+    $('#edit_position_select').on('change', function() {
+        if ($(this).val() === 'OTHER') {
+            $('#edit_custom_position_wrapper').slideDown(150);
+            $('#edit_custom_position').prop('required', true).focus();
+            $('#edit_final_position').val($('#edit_custom_position').val());
+        } else {
+            $('#edit_custom_position_wrapper').slideUp(150);
+            $('#edit_custom_position').prop('required', false).val('');
+            $('#edit_final_position').val($(this).val());
+        }
+    });
+    $('#edit_custom_position').on('input', function() {
+        $('#edit_final_position').val($(this).val());
+    });
+
     // Event delegation untuk populate modal edit karyawan
     $('.btn-edit-emp').on('click', function() {
         var id = $(this).data('id');
@@ -1225,11 +1282,35 @@ $(document).ready(function() {
         $('#edit_id').val(id);
         $('#edit_nip').val(nip);
         $('#edit_name').val(name);
-        $('#edit_position').val(position);
         $('#edit_dept').val(dept);
         $('#edit_shift').val(shift);
         $('#edit_role').val(role);
         $('#edit_salary').val(salary);
+
+        // Periksa apakah posisi sudah ada di daftar preset dropdown
+        var exists = false;
+        $('#edit_position_select option').each(function() {
+            if ($(this).val() === position && $(this).val() !== 'OTHER' && $(this).val() !== '') {
+                exists = true;
+            }
+        });
+
+        if (exists) {
+            $('#edit_position_select').val(position);
+            $('#edit_custom_position_wrapper').hide();
+            $('#edit_custom_position').prop('required', false).val('');
+            $('#edit_final_position').val(position);
+        } else if (position && position !== '-') {
+            $('#edit_position_select').val('OTHER');
+            $('#edit_custom_position_wrapper').show();
+            $('#edit_custom_position').prop('required', true).val(position);
+            $('#edit_final_position').val(position);
+        } else {
+            $('#edit_position_select').val('');
+            $('#edit_custom_position_wrapper').hide();
+            $('#edit_custom_position').prop('required', false).val('');
+            $('#edit_final_position').val('');
+        }
 
         $('#modalEditEmployee').modal('show');
     });
