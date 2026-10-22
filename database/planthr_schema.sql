@@ -102,7 +102,10 @@ INSERT INTO departments (dept_code, dept_name) VALUES
 ('ENG', 'Maintenance & Engineering'),
 ('QC', 'Quality Control'),
 ('LOG', 'Warehouse & Logistics'),
-('HRD', 'Human Resources & GA');
+('HRD', 'Human Resources & GA'),
+('PRC', 'Procurement & Purchasing'),
+('SCM', 'Supply Chain Management'),
+('FIN', 'Finance & Accounting');
 
 INSERT INTO shifts (shift_code, shift_name, start_time, end_time, is_cross_day) VALUES
 ('SH1', 'Shift 1 (Pagi)', '07:00:00', '15:00:00', 0),

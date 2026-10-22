@@ -635,8 +635,14 @@
                 <!-- Master Departemen -->
                 <div class="col-lg-6 mb-4">
                     <div class="plant-card overflow-hidden">
-                        <div class="p-3 bg-white border-bottom">
-                            <h6 class="font-weight-bold text-dark mb-0"><i class="fas fa-sitemap text-primary mr-1"></i> Master Departemen Operasional Pabrik</h6>
+                        <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="font-weight-bold text-dark mb-0"><i class="fas fa-sitemap text-primary mr-1"></i> Master Departemen Pabrik (Office &amp; Non-Office)</h6>
+                                <small class="text-muted">Master divisi kerja yang menaungi seluruh personil pabrik.</small>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm font-weight-bold px-3 shadow-sm" data-toggle="modal" data-target="#modalAddDepartment">
+                                <i class="fas fa-plus-circle mr-1"></i> Tambah Departemen
+                            </button>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover mb-0 small">
@@ -729,7 +735,7 @@
                                 <th>Estimasi Upah</th>
                                 <th>Target Tugas</th>
                                 <th>Status</th>
-                                <th class="text-center">Cetak Slip</th>
+                                <th class="text-center">Aksi Dokumen</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -773,9 +779,12 @@
                                                 <span class="badge badge-warning badge-status">PENDING</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center text-nowrap">
                                             <a href="<?= site_url('dashboard/print_spl/' . $spl->id); ?>" target="_blank" class="btn btn-outline-dark btn-sm px-2 py-1 font-weight-bold" title="Cetak Dokumen Resmi SPL">
                                                 <i class="fas fa-print"></i> Slip
+                                            </a>
+                                            <a href="<?= site_url('dashboard/delete_spl/' . $spl->id); ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus tiket lembur No. <?= $spl->spl_number; ?> (<?= htmlspecialchars($spl->full_name); ?>) secara permanen?');" class="btn btn-outline-danger btn-sm px-2 py-1 font-weight-bold ml-1" title="Hapus Arsip SPL Ini">
+                                                <i class="fas fa-trash-alt"></i> Hapus
                                             </a>
                                         </td>
                                     </tr>
@@ -1058,6 +1067,39 @@
                 </button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- MODAL TAMBAH DEPARTEMEN BARU -->
+<div class="modal fade" id="modalAddDepartment" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title font-weight-bold"><i class="fas fa-sitemap mr-2"></i> Tambah Departemen Baru</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form method="POST" action="<?= site_url('dashboard/add_department'); ?>">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                <div class="modal-body p-4">
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold small text-muted">KODE DEPARTEMEN (UNIK) *</label>
+                        <input type="text" name="dept_code" class="form-control font-mono text-uppercase" placeholder="Contoh: PRC, SCM, FIN, HSE" required maxlength="10">
+                        <small class="text-muted">Singkatan unik 2-10 karakter (misal: PRC untuk Procurement).</small>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="font-weight-bold small text-muted">NAMA LENGKAP DEPARTEMEN *</label>
+                        <input type="text" name="dept_name" class="form-control" placeholder="Contoh: Procurement & Purchasing" required maxlength="100">
+                        <small class="text-muted">Dapat berupa divisi office maupun non-office.</small>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4">
+                        <i class="fas fa-save mr-1"></i> Simpan Departemen
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

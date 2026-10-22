@@ -673,4 +673,50 @@ class Dashboard extends MY_Controller {
         fclose($output);
         exit;
     }
+
+    /**
+     * Hapus Arsip Surat Perintah Lembur (SPL) oleh HR Admin
+     */
+    public function delete_spl($id) {
+        $this->allow_roles(['HR_ADMIN']);
+        $id = (int) $id;
+
+        $spl = $this->db->get_where('overtime_requests', ['id' => $id])->row();
+        if (!$spl) {
+            $this->session->set_flashdata('error', 'Data arsip SPL tidak ditemukan.');
+            redirect('dashboard/hr#spl');
+            return;
+        }
+
+        $this->db->where('id', $id)->delete('overtime_requests');
+        $this->session->set_flashdata('success', 'Data tiket lembur No. ' . $spl->spl_number . ' berhasil dihapus dari arsip.');
+        redirect('dashboard/hr#spl');
+    }
+
+    /**
+     * Tambah Departemen Baru oleh HR Admin
+     */
+    public function add_department() {
+        $this->allow_roles(['HR_ADMIN']);
+
+        $this->form_validation->set_rules('dept_code', 'Kode Departemen', 'required|trim|strtoupper|is_unique[departments.dept_code]|max_length[10]');
+        $this->form_validation->set_rules('dept_name', 'Nama Departemen', 'required|trim|max_length[100]');
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', validation_errors('<div>', '</div>'));
+            redirect('dashboard/hr#dept');
+            return;
+        }
+
+        $dept_code = strtoupper(trim($this->input->post('dept_code', TRUE)));
+        $dept_name = trim($this->input->post('dept_name', TRUE));
+
+        $this->db->insert('departments', [
+            'dept_code' => $dept_code,
+            'dept_name' => $dept_name
+        ]);
+
+        $this->session->set_flashdata('success', 'Departemen baru (' . $dept_code . ' - ' . $dept_name . ') berhasil ditambahkan ke master pabrik.');
+        redirect('dashboard/hr#dept');
+    }
 }
