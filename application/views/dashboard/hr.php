@@ -1002,6 +1002,7 @@
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">DEPARTEMEN / DIVISI *</label>
                         <select name="department_id" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih Departemen / Divisi Pabrik --</option>
                             <?php foreach ($departments as $d): ?>
                                 <option value="<?= $d->id; ?>"><?= $d->dept_name; ?> (<?= $d->dept_code; ?>)</option>
                             <?php endforeach; ?>
@@ -1010,6 +1011,7 @@
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold small text-muted">POLA SHIFT KERJA *</label>
                         <select name="shift_id" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih Pola Shift Kerja --</option>
                             <?php foreach ($shifts as $s): ?>
                                 <option value="<?= $s->id; ?>">
                                     <?= $s->shift_name; ?> (<?= substr($s->start_time, 0, 5); ?> - <?= substr($s->end_time, 0, 5); ?>)
