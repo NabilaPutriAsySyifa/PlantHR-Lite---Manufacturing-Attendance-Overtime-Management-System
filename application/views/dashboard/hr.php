@@ -727,27 +727,39 @@
                 <!-- Master Shift -->
                 <div class="col-lg-6 mb-4">
                     <div class="plant-card overflow-hidden">
-                        <div class="p-3 bg-white border-bottom">
-                            <h6 class="font-weight-bold text-dark mb-0"><i class="fas fa-business-time text-primary mr-1"></i> Master Pola Shift Kerja (24/7)</h6>
+                        <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="font-weight-bold text-dark mb-0"><i class="fas fa-business-time text-primary mr-1"></i> Master Pola Jam Kerja &amp; Shift (Office &amp; Pabrik)</h6>
+                                <small class="text-muted">Pola jam kerja 24/7 lini pabrik &amp; jam normal kantor (Office Hours).</small>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm font-weight-bold px-3 shadow-sm" data-toggle="modal" data-target="#modalAddShift">
+                                <i class="fas fa-plus-circle mr-1"></i> Tambah Shift
+                            </button>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover mb-0 small">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Kode</th>
-                                        <th>Nama Shift</th>
+                                        <th>Nama Pola Kerja</th>
                                         <th>Jam Kerja</th>
-                                        <th>Tipe Shift</th>
+                                        <th>Kategori &amp; Tipe</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($shifts as $s): ?>
                                         <tr>
-                                            <td><span class="badge badge-secondary font-mono"><?= $s->shift_code; ?></span></td>
+                                            <td><span class="badge badge-dark font-mono"><?= $s->shift_code; ?></span></td>
                                             <td><strong><?= $s->shift_name; ?></strong></td>
-                                            <td><?= substr($s->start_time, 0, 5); ?> - <?= substr($s->end_time, 0, 5); ?> WIB</td>
+                                            <td><span class="font-mono"><?= substr($s->start_time, 0, 5); ?> - <?= substr($s->end_time, 0, 5); ?> WIB</span></td>
                                             <td>
-                                                <?= $s->is_cross_day ? '<span class="badge badge-danger">Lintas Hari (Malam)</span>' : '<span class="badge badge-success">Reguler Hari Sama</span>'; ?>
+                                                <?php if ($s->shift_code === 'OFF' || stripos($s->shift_name, 'office') !== false): ?>
+                                                    <span class="badge badge-info"><i class="fas fa-building mr-1"></i> Non-Shift (Office)</span>
+                                                <?php elseif ($s->is_cross_day): ?>
+                                                    <span class="badge badge-danger"><i class="fas fa-moon mr-1"></i> Pabrik: Lintas Hari (Malam)</span>
+                                                <?php else: ?>
+                                                    <span class="badge badge-success"><i class="fas fa-industry mr-1"></i> Pabrik: Reguler Shift</span>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -1224,6 +1236,56 @@
                     <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary font-weight-bold px-4">
                         <i class="fas fa-save mr-1"></i> Simpan Departemen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TAMBAH POLA SHIFT / JAM KERJA BARU -->
+<div class="modal fade" id="modalAddShift" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title font-weight-bold"><i class="fas fa-business-time mr-2"></i> Tambah Pola Jam Kerja / Shift</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form method="POST" action="<?= site_url('dashboard/add_shift'); ?>">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                <div class="modal-body p-4">
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold small text-muted">KODE POLA / SHIFT (UNIK) *</label>
+                        <input type="text" name="shift_code" class="form-control font-mono text-uppercase" placeholder="Contoh: OFF, SH4, MID, SEC" required maxlength="10">
+                        <small class="text-muted">Singkatan unik kode shift (misal: OFF untuk Office, MID untuk Middle shift).</small>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold small text-muted">NAMA POLA SHIFT / JAM KERJA *</label>
+                        <input type="text" name="shift_name" class="form-control" placeholder="Contoh: Non-Shift (Reguler Office) / Shift Middle" required maxlength="50">
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="font-weight-bold small text-muted">JAM MASUK *</label>
+                            <input type="time" name="start_time" class="form-control font-mono" value="08:00" required>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="font-weight-bold small text-muted">JAM PULANG *</label>
+                            <input type="time" name="end_time" class="form-control font-mono" value="17:00" required>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="font-weight-bold small text-muted">TIPE SHIFT KERJA *</label>
+                        <select name="is_cross_day" class="form-control" required>
+                            <option value="0">Reguler Hari Sama (Contoh: 08:00 - 17:00 / 07:00 - 15:00)</option>
+                            <option value="1">Lintas Hari / Malam Menembus Pagi (Contoh: 23:00 - 07:00)</option>
+                        </select>
+                        <small class="text-info font-weight-bold mt-1 d-block"><i class="fas fa-info-circle mr-1"></i>Pilih 'Lintas Hari' hanya jika jam shift malam selesai di hari berikutnya.</small>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold px-4">
+                        <i class="fas fa-save mr-1"></i> Simpan Pola Jam Kerja
                     </button>
                 </div>
             </form>

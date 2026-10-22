@@ -842,6 +842,44 @@ class Dashboard extends MY_Controller {
     }
 
     /**
+     * Tambah Pola Shift / Jam Kerja Baru (Office & Pabrik)
+     */
+    public function add_shift() {
+        $this->allow_roles(['HR_ADMIN']);
+
+        $this->form_validation->set_rules('shift_code', 'Kode Shift', 'required|trim|strtoupper|is_unique[shifts.shift_code]|max_length[10]');
+        $this->form_validation->set_rules('shift_name', 'Nama Pola Shift', 'required|trim|max_length[50]');
+        $this->form_validation->set_rules('start_time', 'Jam Masuk', 'required');
+        $this->form_validation->set_rules('end_time', 'Jam Pulang', 'required');
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', validation_errors('<div>', '</div>'));
+            redirect('dashboard/hr#dept');
+            return;
+        }
+
+        $shift_code   = strtoupper(trim($this->input->post('shift_code', TRUE)));
+        $shift_name   = trim($this->input->post('shift_name', TRUE));
+        $start_time   = trim($this->input->post('start_time', TRUE));
+        $end_time     = trim($this->input->post('end_time', TRUE));
+        $is_cross_day = $this->input->post('is_cross_day') ? 1 : 0;
+
+        if (strlen($start_time) === 5) $start_time .= ':00';
+        if (strlen($end_time) === 5) $end_time .= ':00';
+
+        $this->db->insert('shifts', [
+            'shift_code'   => $shift_code,
+            'shift_name'   => $shift_name,
+            'start_time'   => $start_time,
+            'end_time'     => $end_time,
+            'is_cross_day' => $is_cross_day
+        ]);
+
+        $this->session->set_flashdata('success', 'Pola Jam Kerja / Shift baru (' . $shift_code . ' - ' . $shift_name . ') berhasil ditambahkan.');
+        redirect('dashboard/hr#dept');
+    }
+
+    /**
      * Endpoint API JSON untuk Live-Sync Real-Time Dashboard HR
      * Mengambil 100% data riil dari database (Summary metrik & 4 grafik analitik)
      */

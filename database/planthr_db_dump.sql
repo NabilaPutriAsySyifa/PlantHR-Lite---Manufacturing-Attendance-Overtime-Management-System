@@ -195,8 +195,7 @@ CREATE TABLE `shifts` (
 --
 
 LOCK TABLES `shifts` WRITE;
-/*!40000 ALTER TABLE `shifts` DISABLE KEYS */;
-INSERT INTO `shifts` VALUES (1,'SH1','Shift 1 (Pagi)','07:00:00','15:00:00',0,'2026-10-20 08:56:12'),(2,'SH2','Shift 2 (Sore)','15:00:00','23:00:00',0,'2026-10-20 08:56:12'),(3,'SH3','Shift 3 (Malam)','23:00:00','07:00:00',1,'2026-10-20 08:56:12');
+INSERT INTO `shifts` VALUES (1,'SH1','Shift 1 (Pagi)','07:00:00','15:00:00',0,'2026-10-20 08:56:12'),(2,'SH2','Shift 2 (Sore)','15:00:00','23:00:00',0,'2026-10-20 08:56:12'),(3,'SH3','Shift 3 (Malam)','23:00:00','07:00:00',1,'2026-10-20 08:56:12'),(4,'OFF','Non-Shift (Reguler Office)','08:00:00','17:00:00',0,'2026-10-22 18:03:40');
 /*!40000 ALTER TABLE `shifts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

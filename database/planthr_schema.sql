@@ -111,7 +111,8 @@ INSERT INTO departments (dept_code, dept_name) VALUES
 INSERT INTO shifts (shift_code, shift_name, start_time, end_time, is_cross_day) VALUES
 ('SH1', 'Shift 1 (Pagi)', '07:00:00', '15:00:00', 0),
 ('SH2', 'Shift 2 (Sore)', '15:00:00', '23:00:00', 0),
-('SH3', 'Shift 3 (Malam)', '23:00:00', '07:00:00', 1);
+('SH3', 'Shift 3 (Malam)', '23:00:00', '07:00:00', 1),
+('OFF', 'Non-Shift (Reguler Office)', '08:00:00', '17:00:00', 0);
 
 INSERT INTO employees (nip, full_name, gender, department_id, shift_id, role, base_salary, join_date, email, password) VALUES
 ('EMP001', 'Budi Santoso', 'L', 5, 1, 'HR_ADMIN', 7500000.00, '2023-01-10', 'hr@plant.local', '$2y$10$Y8SY5vH.0P.moy7rNT2jR.8CEFwz1loI.yAdmdDSWLMxBECH.gZ6G'),
