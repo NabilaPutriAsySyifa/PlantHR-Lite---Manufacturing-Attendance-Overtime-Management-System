@@ -43,6 +43,8 @@ class Dashboard extends MY_Controller {
         $data['spl_archive']     = $this->Overtime_model->get_filtered_spl_archive($filter_status, $filter_dept, null);
         $data['trend_7days']     = $this->Dashboard_model->get_7days_attendance_trend();
         $data['ot_dist']         = $this->Dashboard_model->get_overtime_distribution_by_dept();
+        $data['shift_dist']      = $this->Dashboard_model->get_shift_distribution();
+        $data['ot_cost_dist']    = $this->Dashboard_model->get_overtime_cost_by_dept();
         
         // Solusi Masalah #7: Rekapitulasi Periode Cut-Off Payroll Terpadu
         $data['payroll_summary'] = $this->Dashboard_model->get_payroll_cutoff_summary($cutoff_start, $cutoff_end, $filter_dept);

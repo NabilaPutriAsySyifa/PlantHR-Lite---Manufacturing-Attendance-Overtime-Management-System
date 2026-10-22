@@ -175,6 +175,73 @@ class Dashboard_model extends CI_Model {
     }
 
     /**
+     * Visual Analytics: Komposisi Personil per Shift Kerja Pabrik (Capacity Balance)
+     */
+    public function get_shift_distribution() {
+        $res = $this->db->select('s.shift_name, s.start_time, s.end_time, COUNT(e.id) AS total_employees')
+            ->from('shifts s')
+            ->join('employees e', 'e.shift_id = s.id AND e.is_active = 1', 'left')
+            ->group_by('s.id')
+            ->order_by('s.id', 'ASC')
+            ->get()
+            ->result();
+
+        $labels = [];
+        $data   = [];
+        foreach ($res as $r) {
+            $time_label = substr($r->start_time, 0, 5) . ' - ' . substr($r->end_time, 0, 5);
+            $labels[] = $r->shift_name . ' (' . $time_label . ')';
+            $data[]   = (int) $r->total_employees;
+        }
+
+        return [
+            'labels' => $labels,
+            'data'   => $data
+        ];
+    }
+
+    /**
+     * Visual Analytics: Estimasi Biaya Upah Lembur (Rp) per Departemen (PP No. 35/2021)
+     */
+    public function get_overtime_cost_by_dept() {
+        $this->load->model('Overtime_model');
+
+        $rows = $this->db->select('d.dept_name, ot.total_hours, e.base_salary')
+            ->from('departments d')
+            ->join('employees e', 'e.department_id = d.id', 'left')
+            ->join('overtime_requests ot', 'ot.employee_id = e.id AND ot.status = "APPROVED"', 'left')
+            ->get()
+            ->result();
+
+        $cost_map = [];
+        $all_depts = $this->db->select('dept_name')->from('departments')->order_by('id', 'ASC')->get()->result();
+        foreach ($all_depts as $dept) {
+            $cost_map[$dept->dept_name] = 0;
+        }
+
+        foreach ($rows as $r) {
+            if (!empty($r->total_hours) && $r->total_hours > 0 && !empty($r->base_salary)) {
+                $calc = $this->Overtime_model->calculate_pp35_overtime($r->total_hours, $r->base_salary);
+                $cost_map[$r->dept_name] += $calc['estimated_pay'];
+            }
+        }
+
+        arsort($cost_map);
+
+        $labels = [];
+        $data   = [];
+        foreach ($cost_map as $dept_name => $cost) {
+            $labels[] = $dept_name;
+            $data[]   = (int) $cost;
+        }
+
+        return [
+            'labels' => $labels,
+            'data'   => $data
+        ];
+    }
+
+    /**
      * Detail Lembar Resmi SPL untuk Fitur Cetak Slip (Print View)
      */
     public function get_spl_by_id($id) {

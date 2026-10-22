@@ -289,6 +289,49 @@
         </div>
     </div>
 
+    <!-- Visual Analytics Baris 2: Komposisi Shift & Estimasi Biaya Lembur (Rp PP 35/2021) -->
+    <div class="row mb-4">
+        <!-- Grafik Komposisi Personil per Shift -->
+        <div class="col-lg-5 mb-3 mb-lg-0">
+            <div class="plant-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6 class="font-weight-bold text-dark mb-0">
+                            <i class="fas fa-users-cog text-warning mr-2"></i>Komposisi Personil per Shift
+                        </h6>
+                        <small class="text-muted">Keseimbangan kapasitas regu kerja 24/7 (Pagi, Sore, Malam).</small>
+                    </div>
+                    <span class="badge badge-light border text-dark font-weight-bold px-2 py-1">
+                        Pola 3-Shift
+                    </span>
+                </div>
+                <div style="height: 250px;">
+                    <canvas id="shiftDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grafik Estimasi Biaya Upah Lembur (Rp) per Departemen -->
+        <div class="col-lg-7">
+            <div class="plant-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6 class="font-weight-bold text-dark mb-0">
+                            <i class="fas fa-money-bill-wave text-success mr-2"></i>Estimasi Biaya Upah Lembur per Departemen (PP No. 35/2021)
+                        </h6>
+                        <small class="text-muted">Akumulasi pengeluaran kompensasi upah lembur resmi (dalam Rupiah).</small>
+                    </div>
+                    <span class="badge badge-light border text-primary font-weight-bold px-2 py-1">
+                        Formula: Gaji / 173
+                    </span>
+                </div>
+                <div style="height: 250px;">
+                    <canvas id="otCostDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation Tabs -->
     <ul class="nav nav-tabs border-0 mb-3" id="hrTabs" role="tablist">
         <li class="nav-item">
@@ -1217,6 +1260,99 @@ $(document).ready(function() {
                     legend: {
                         position: 'bottom',
                         labels: { font: { family: 'Inter', size: 11 }, boxWidth: 12 }
+                    }
+                }
+            }
+        });
+    }
+
+    // Inisialisasi Chart 3: Komposisi Personil per Shift Kerja
+    var shiftCtx = document.getElementById('shiftDistributionChart');
+    if (shiftCtx) {
+        new Chart(shiftCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: <?= json_encode($shift_dist['labels']); ?>,
+                datasets: [{
+                    data: <?= json_encode($shift_dist['data']); ?>,
+                    backgroundColor: ['#2563eb', '#f59e0b', '#6366f1', '#10b981', '#ec4899', '#06b6d4'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { family: 'Inter', size: 11 }, boxWidth: 12 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' ' + context.label + ': ' + context.parsed + ' Karyawan';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Inisialisasi Chart 4: Estimasi Biaya Upah Lembur (Rp) per Departemen
+    var otCostCtx = document.getElementById('otCostDistributionChart');
+    if (otCostCtx) {
+        new Chart(otCostCtx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: <?= json_encode($ot_cost_dist['labels']); ?>,
+                datasets: [{
+                    label: 'Biaya Upah Lembur (Rp)',
+                    data: <?= json_encode($ot_cost_dist['data']); ?>,
+                    backgroundColor: '#059669',
+                    hoverBackgroundColor: '#047857',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: 'Inter', size: 10 },
+                            maxRotation: 35,
+                            minRotation: 0
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#e2e8f0' },
+                        ticks: {
+                            font: { family: 'JetBrains Mono', size: 10 },
+                            callback: function(value) {
+                                if (value >= 1000000) {
+                                    return 'Rp ' + (value / 1000000).toFixed(1) + ' jt';
+                                } else if (value >= 1000) {
+                                    return 'Rp ' + (value / 1000).toFixed(0) + ' rb';
+                                }
+                                return 'Rp ' + value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' Upah Lembur: Rp ' + context.parsed.y.toLocaleString('id-ID');
+                            }
+                        }
                     }
                 }
             }
