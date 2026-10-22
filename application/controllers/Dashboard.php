@@ -47,6 +47,11 @@ class Dashboard extends MY_Controller {
         // Solusi Masalah #7: Rekapitulasi Periode Cut-Off Payroll Terpadu
         $data['payroll_summary'] = $this->Dashboard_model->get_payroll_cutoff_summary($cutoff_start, $cutoff_end, $filter_dept);
 
+        // Presensi Mandiri HR Admin
+        $user_id                 = $this->session->userdata('user_id');
+        $data['my_attendance']   = $this->Attendance_model->get_active_attendance($user_id);
+        $data['my_shift']        = $this->Attendance_model->get_employee_shift($user_id);
+
         $data['filter_date']     = $filter_date;
         $data['filter_dept']     = $filter_dept;
         $data['filter_status']   = $filter_status;
@@ -70,18 +75,22 @@ class Dashboard extends MY_Controller {
         $data['decision_history'] = $this->Overtime_model->get_supervisor_decision_history($user_id, 25);
         $data['team_members']     = $this->Dashboard_model->get_supervisor_team($department_id);
 
+        // Presensi Mandiri Supervisor
+        $data['my_attendance']   = $this->Attendance_model->get_active_attendance($user_id);
+        $data['my_shift']        = $this->Attendance_model->get_employee_shift($user_id);
+
         $this->load->view('dashboard/supervisor', $data);
     }
 
     /**
-     * Portal Operator Produksi
+     * Portal Presensi Karyawan (Employee Self-Service / ESS)
      * Presensi mandiri (Shift Pagi/Sore/Malam lintas hari) & Pengajuan SPL
      */
     public function operator() {
         $this->allow_roles(['OPERATOR']);
         $user_id = $this->session->userdata('user_id');
 
-        $data['title']            = 'Portal Operator Produksi';
+        $data['title']            = 'Portal Presensi Karyawan (ESS)';
         $data['today_attendance'] = $this->Attendance_model->get_active_attendance($user_id);
         $data['my_attendances']   = $this->Dashboard_model->get_operator_attendances($user_id);
         $data['my_spl_list']      = $this->Overtime_model->get_employee_spl_history($user_id);
@@ -90,23 +99,22 @@ class Dashboard extends MY_Controller {
         $this->load->view('dashboard/operator', $data);
     }
 
-    /**
-     * Aksi Presensi Masuk (Clock In)
-     */
     public function clock_in() {
-        $this->allow_roles(['OPERATOR']);
+        $this->allow_roles(['OPERATOR', 'SUPERVISOR', 'HR_ADMIN']);
         $user_id = $this->session->userdata('user_id');
+        $role    = $this->session->userdata('role');
+        $redirect_target = ($role === 'HR_ADMIN') ? 'dashboard/hr' : (($role === 'SUPERVISOR') ? 'dashboard/supervisor' : 'dashboard/operator');
 
         $active = $this->Attendance_model->get_active_attendance($user_id);
         if ($active && !empty($active->clock_in) && empty($active->clock_out)) {
             $this->session->set_flashdata('error', 'Anda telah melakukan Clock In dan belum melakukan Clock Out.');
-            redirect('dashboard/operator');
+            redirect($redirect_target);
             return;
         }
 
         if ($active && !empty($active->clock_in) && !empty($active->clock_out) && $active->attendance_date === date('Y-m-d')) {
             $this->session->set_flashdata('error', 'Presensi Anda untuk hari ini sudah lengkap (sudah Clock Out).');
-            redirect('dashboard/operator');
+            redirect($redirect_target);
             return;
         }
 
@@ -114,33 +122,35 @@ class Dashboard extends MY_Controller {
         $this->Attendance_model->record_clock_in($user_id, $shift);
 
         $this->session->set_flashdata('success', 'Presensi masuk (Clock In) berhasil dicatat.');
-        redirect('dashboard/operator');
+        redirect($redirect_target);
     }
 
     /**
      * Aksi Presensi Pulang (Clock Out)
      */
     public function clock_out() {
-        $this->allow_roles(['OPERATOR']);
+        $this->allow_roles(['OPERATOR', 'SUPERVISOR', 'HR_ADMIN']);
         $user_id = $this->session->userdata('user_id');
+        $role    = $this->session->userdata('role');
+        $redirect_target = ($role === 'HR_ADMIN') ? 'dashboard/hr' : (($role === 'SUPERVISOR') ? 'dashboard/supervisor' : 'dashboard/operator');
 
         $active = $this->Attendance_model->get_active_attendance($user_id);
 
         if (!$active || empty($active->clock_in)) {
             $this->session->set_flashdata('error', 'Anda belum melakukan Clock In.');
-            redirect('dashboard/operator');
+            redirect($redirect_target);
             return;
         }
 
         if (!empty($active->clock_out)) {
             $this->session->set_flashdata('error', 'Anda sudah melakukan Clock Out sebelumnya.');
-            redirect('dashboard/operator');
+            redirect($redirect_target);
             return;
         }
 
         $this->Attendance_model->record_clock_out($active->id);
         $this->session->set_flashdata('success', 'Presensi pulang (Clock Out) berhasil dicatat. Terima kasih atas dedikasi dan kerja keras Anda.');
-        redirect('dashboard/operator');
+        redirect($redirect_target);
     }
 
     /**

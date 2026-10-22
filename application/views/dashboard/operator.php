@@ -130,14 +130,19 @@
     <!-- Welcome & Shift Banner -->
     <div class="plant-card p-3 p-md-4 mb-4 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
         <div class="mb-3 mb-md-0">
-            <span class="badge badge-primary px-2 py-1 mb-2 font-weight-bold">PORTAL OPERATOR PRODUKSI PABRIK</span>
+            <span class="badge badge-primary px-2 py-1 mb-2 font-weight-bold">
+                <i class="fas fa-id-card-alt mr-1"></i> PORTAL PRESENSI KARYAWAN (EMPLOYEE SELF-SERVICE)
+            </span>
             <h4 class="font-weight-bold text-dark m-0">Selamat Datang, <?= $this->session->userdata('full_name'); ?></h4>
             <p class="text-muted small mb-0 mt-1">
-                Departemen: <strong><?= $this->session->userdata('dept_name'); ?></strong> &bull; Jadwal Reguler: <strong><?= $this->session->userdata('shift_name'); ?></strong>
+                Departemen: <strong><?= $this->session->userdata('dept_name'); ?></strong> &bull; Peran: <strong>Staf Operasional</strong> &bull; Jadwal Reguler: <strong><?= $this->session->userdata('shift_name'); ?></strong>
                 <?php if (!empty($shift)): ?>
                     (<?= substr($shift->start_time, 0, 5); ?> - <?= substr($shift->end_time, 0, 5); ?> WIB<?= $shift->is_cross_day ? ' &bull; Lintas Hari' : ''; ?>)
                 <?php endif; ?>
             </p>
+            <small class="text-info font-weight-bold d-block mt-1">
+                <i class="fas fa-info-circle mr-1"></i> Berlaku untuk staf seluruh lini: Produksi, Maintenance &amp; Engineering (Teknisi), Quality Control (QC), &amp; Warehouse/Logistik.
+            </small>
         </div>
         <div class="text-md-right">
             <div class="clock-display" id="liveClock">00:00:00 WIB</div>

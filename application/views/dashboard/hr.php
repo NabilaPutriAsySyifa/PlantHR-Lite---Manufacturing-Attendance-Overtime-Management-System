@@ -137,6 +137,61 @@
         </div>
     </div>
 
+    <!-- Presensi Mandiri HR Admin (Self-Service Attendance) -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #fff;">
+        <div class="card-body p-3 p-md-4 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between" style="gap: 15px;">
+            <div class="d-flex align-items-center">
+                <div class="p-3 rounded-circle mr-3" style="background: rgba(37, 99, 235, 0.2); border: 1px solid rgba(59, 130, 246, 0.3);">
+                    <i class="fas fa-fingerprint fa-2x text-primary"></i>
+                </div>
+                <div>
+                    <div class="d-flex align-items-center mb-1">
+                        <span class="badge badge-primary font-weight-bold mr-2">PRESENSI MANDIRI ANDA</span>
+                        <small class="text-white-50 font-weight-bold">NIP: <?= $this->session->userdata('nip'); ?> &bull; Jadwal: <?= !empty($my_shift) ? $my_shift->shift_name . ' (' . substr($my_shift->start_time, 0, 5) . ' - ' . substr($my_shift->end_time, 0, 5) . ' WIB)' : 'Reguler'; ?></small>
+                    </div>
+                    <h5 class="font-weight-bold mb-0 text-white">Halo, <?= $this->session->userdata('full_name'); ?> (HR Administrator)</h5>
+                    <small class="text-white-50">Sebagai staf HRD, kehadiran Anda juga tercatat di sistem presensi pabrik secara akuntabel.</small>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center flex-wrap" style="gap: 12px;">
+                <?php if (empty($my_attendance) || empty($my_attendance->clock_in)): ?>
+                    <div class="text-lg-right mr-lg-2">
+                        <span class="badge badge-warning text-dark font-weight-bold px-2 py-1"><i class="fas fa-clock mr-1"></i> Belum Presensi Masuk</span>
+                        <div class="small text-white-50 mt-1">Waktu Server: <span class="text-warning font-weight-bold font-mono"><?= date('H:i'); ?> WIB</span></div>
+                    </div>
+                    <form method="POST" action="<?= site_url('dashboard/clock_in'); ?>" class="m-0">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                        <button type="submit" class="btn btn-success font-weight-bold px-4 py-2 shadow-sm d-flex align-items-center">
+                            <i class="fas fa-sign-in-alt mr-2 fa-lg"></i> PRESENSI MASUK SEKARANG
+                        </button>
+                    </form>
+                <?php elseif (!empty($my_attendance->clock_in) && empty($my_attendance->clock_out)): ?>
+                    <div class="text-lg-right mr-lg-2">
+                        <span class="badge badge-success font-weight-bold px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Sedang Bertugas</span>
+                        <div class="small text-white-50 mt-1">Masuk: <strong class="text-white font-mono"><?= date('H:i', strtotime($my_attendance->clock_in)); ?> WIB</strong> (<?= $my_attendance->status === 'LATE' ? '<span class="text-warning font-weight-bold">Telat ' . $my_attendance->late_minutes . 'm</span>' : 'Tepat Waktu'; ?>)</div>
+                    </div>
+                    <form method="POST" action="<?= site_url('dashboard/clock_out'); ?>" class="m-0">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                        <button type="submit" class="btn btn-danger font-weight-bold px-4 py-2 shadow-sm d-flex align-items-center">
+                            <i class="fas fa-sign-out-alt mr-2 fa-lg"></i> PRESENSI PULANG (CLOCK OUT)
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <div class="d-flex align-items-center bg-dark p-2 px-3 rounded border border-secondary">
+                        <i class="fas fa-calendar-check text-success mr-2 fa-lg"></i>
+                        <div>
+                            <span class="badge badge-success font-weight-bold">Presensi Hari Ini Selesai</span>
+                            <div class="small text-white-50 mt-1 font-mono">
+                                Masuk: <?= date('H:i', strtotime($my_attendance->clock_in)); ?> &bull; Pulang: <?= date('H:i', strtotime($my_attendance->clock_out)); ?> WIB
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
     <!-- 4 High Impact Metric Cards -->
     <div class="row mb-4">
         <div class="col-sm-6 col-lg-3 mb-3 mb-lg-0">
