@@ -99,14 +99,15 @@ Dashboard HR Admin dilengkapi 4 grafik analitik bisnis terpadu:
 
 ## Tata Kelola Akun & Penanganan Lupa Sandi (SOP Pabrik)
 
-Sistem HRMS terintegrasi langsung dengan data sensitif Payroll dan Upah Lembur resmi, sehingga pendaftaran dan pemulihan akun diatur secara berjenjang (*Hierarchical RBAC*):
+Sistem HRMS terintegrasi langsung dengan data sensitif Payroll dan Upah Lembur resmi, sehingga pendaftaran dan pemulihan akun diatur secara berjenjang (*Hierarchical RBAC*) dengan pemisahan privasi yang ketat:
 
-| Skenario Kasus | Pihak Penanggung Jawab | Prosedur Solusi Teknis |
+| Tingkat Klasifikasi | Audiens Target | Lokasi Akses & Prosedur |
 |---|---|---|
-| **1. Karyawan / SPV Lupa Sandi** | **HR Administrator** | Karyawan melapor NIP ke kantor HRD. HR Admin membuka tab *Master Karyawan* dan menekan tombol kuning `[Reset Password]` untuk mengembalikan sandi ke default (`admin123`). |
-| **2. HR Admin Lupa Sandi (Darurat)** | **Tim IT / Sysadmin Server** | Tim IT mengeksekusi alat pemulihan darurat di terminal server: `php scripts/reset_admin.php hr@plant.local admin123` untuk memulihkan akun dalam 1 detik. |
-| **3. Pendaftaran Akun Karyawan Baru** | **HR Administrator** | HR Admin mendaftarkan personil resmi melalui tombol `[+ Tambah Karyawan Baru]` di tab *Master Karyawan* (mencegah pendaftaran ilegal oleh pihak luar). |
-| **4. Inisialisasi Hari-0 (Fresh Install)** | **Tim IT / DevOps** | Akun admin default terpasang otomatis via *database seeder* (`planthr_schema.sql`): `hr@plant.local` / `admin123`. |
+| **Bagian I (Publik / Umum)** | Seluruh Karyawan, Staf, & Supervisor | Muncul di modal *"Lupa Kata Sandi?"* pada halaman login web. Menjelaskan tata cara verifikasi fisik ke HRD tanpa membocorkan kredensial atau script internal. |
+| **Bagian II (Terbatas / Restricted)** | HR Administrator | Muncul di modal *"SOP Internal HR & IT"* dalam Dashboard HR Admin. Memandu pengelolaan kredensial personil di tab Master Karyawan. |
+| **Bagian III (Rahasia / Confidential)** | Tim IT / Sysadmin Server | Prosedur Disaster Recovery konsol server: `php scripts/reset_admin.php` dan backup otomatis `scripts/auto_backup.sh`. |
+
+> Rincian lengkap tersedia pada dokumen resmi: [`docs/SOP_KEAMANAN_DAN_PEMULIHAN_AKUN.md`](docs/SOP_KEAMANAN_DAN_PEMULIHAN_AKUN.md).
 
 ---
 

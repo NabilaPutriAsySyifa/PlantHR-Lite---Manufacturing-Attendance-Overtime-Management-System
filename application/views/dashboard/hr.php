@@ -94,7 +94,10 @@
             <span>PlantHR <span class="text-primary font-weight-bolder">Lite</span></span>
         </a>
         <div class="navbar-nav ml-auto align-items-center flex-row">
-            <span class="navbar-text mr-3 text-white">
+            <button type="button" class="btn btn-outline-warning btn-sm font-weight-bold mr-3 shadow-sm" data-toggle="modal" data-target="#modalSopAdmin">
+                <i class="fas fa-shield-alt mr-1"></i> SOP Internal HR &amp; IT
+            </button>
+            <span class="navbar-text mr-3 text-white d-none d-md-inline">
                 <i class="fas fa-user-shield text-warning mr-1"></i> <?= $this->session->userdata('full_name'); ?>
                 <span class="badge badge-warning text-dark font-weight-bold ml-1">Administrator Utama</span>
             </span>
@@ -1434,6 +1437,110 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SOP INTERNAL RAHASIA (KHUSUS HR ADMINISTRATOR & TIM IT) -->
+<div class="modal fade" id="modalSopAdmin" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-dark text-white">
+                <div class="d-flex align-items-center">
+                    <span class="badge badge-danger px-2 py-1 mr-2 text-uppercase font-weight-bold" style="letter-spacing: 0.5px;">
+                        <i class="fas fa-lock mr-1"></i> Rahasia / Terbatas
+                    </span>
+                    <h5 class="modal-title font-weight-bold mb-0">
+                        SOP Internal: Tata Kelola Akun &amp; Disaster Recovery (Khusus HR Admin &amp; IT)
+                    </h5>
+                </div>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body p-4 bg-light">
+                <div class="alert alert-warning border-warning small mb-4 py-2 px-3 d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle fa-2x text-warning mr-3 flex-shrink-0"></i>
+                    <div>
+                        <strong>DOKUMEN KEBIJAKAN PRIVASI &amp; KEAMANAN TINGKAT TINGGI:</strong>
+                        Prosedur di bawah ini <strong>hanya boleh diketahui dan dijalankan oleh HR Administrator dan Tim IT / Sysadmin</strong>. Dilarang menyebarkan prosedur teknis ini, kunci inisialisasi default, atau instruksi terminal ke staf/karyawan lini operasional pabrik.
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- KOLOM 1: DIVISI HRD / HR ADMINISTRATOR -->
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <div class="card h-100 border-0 shadow-sm rounded-lg overflow-hidden">
+                            <div class="card-header bg-primary text-white py-2 px-3 d-flex align-items-center justify-content-between">
+                                <span class="font-weight-bold small"><i class="fas fa-user-tie mr-1"></i> BAGIAN I: PROSEDUR DIVISI HRD</span>
+                                <span class="badge badge-light text-primary font-weight-bold">HR Administrator</span>
+                            </div>
+                            <div class="card-body p-3 small text-dark" style="line-height: 1.7;">
+                                <h6 class="font-weight-bold text-primary mb-2">A. Penanganan Permohonan Reset Sandi Karyawan</h6>
+                                <ol class="pl-3 mb-3">
+                                    <li><strong>Verifikasi Fisik Wajib:</strong> Karyawan yang mengajukan lupa sandi harus diverifikasi identitasnya secara langsung (menunjukkan ID Badge pabrik dan NIP resmi) guna mencegah aksi peniruan akun (<em>social engineering</em>).</li>
+                                    <li><strong>Akses Menu Master Karyawan:</strong> HR Admin membuka tab <strong>Data Master Karyawan</strong> di portal PlantHR Lite.</li>
+                                    <li><strong>Klik Tombol Kunci Kuning:</strong> Pada baris nama karyawan bersangkutan, klik tombol kuning berikon kunci (<i class="fas fa-key text-warning"></i>) untuk membuka jendela reset.</li>
+                                    <li><strong>Penerbitan Sandi Baru:</strong>
+                                        <ul class="pl-3 mt-1">
+                                            <li>HR Admin dapat mengetikkan kata sandi baru kustom (minimal 6 karakter).</li>
+                                            <li>Atau mengklik tombol <span class="badge badge-outline-primary border">Isi Standar (admin123)</span> untuk inisialisasi sementara.</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Enkripsi Otomatis:</strong> Klik <strong>Simpan Kata Sandi Baru</strong>. Sistem seketika mengacak sandi dengan enkripsi Bcrypt dan memperbarui kolom <code>password_changed_at</code>.</li>
+                                    <li><strong>Instruksi Mandiri ke Karyawan:</strong> Beritahukan sandi baru tersebut secara rahasia langsung kepada personil bersangkutan dan minta mereka segera login serta mengubah sandi barunya.</li>
+                                </ol>
+
+                                <h6 class="font-weight-bold text-primary mb-2">B. Pendaftaran &amp; Pemutusan Akses Akun</h6>
+                                <ul class="pl-3 mb-0">
+                                    <li>Pendaftaran personil baru hanya boleh dilakukan melalui tombol <strong>Tambah Karyawan Baru</strong> untuk mencegah pendaftaran akun ilegal.</li>
+                                    <li>Karyawan yang dinonaktifkan atau berhenti wajib segera dinonaktifkan statusnya (<i class="fas fa-power-off text-warning"></i>) agar hak akses login seketika tertutup.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KOLOM 2: TIM IT / SYSADMIN (DISASTER RECOVERY) -->
+                    <div class="col-lg-6">
+                        <div class="card h-100 border-0 shadow-sm rounded-lg overflow-hidden">
+                            <div class="card-header bg-dark text-white py-2 px-3 d-flex align-items-center justify-content-between">
+                                <span class="font-weight-bold small"><i class="fas fa-terminal mr-1"></i> BAGIAN II: PROSEDUR TIM IT / SYSADMIN</span>
+                                <span class="badge badge-warning text-dark font-weight-bold">Disaster Recovery</span>
+                            </div>
+                            <div class="card-body p-3 small text-dark" style="line-height: 1.7;">
+                                <h6 class="font-weight-bold text-dark mb-2">A. Pemulihan Darurat Akun HR Admin Terkunci</h6>
+                                <p class="text-muted mb-2">
+                                    Jika akun Administrator Utama (<code>hr@plant.local</code>) terkunci atau lupa kata sandi sehingga tidak bisa masuk ke dashboard web:
+                                </p>
+                                <ol class="pl-3 mb-3">
+                                    <li>Tim IT login langsung ke console terminal server pabrik (SSH / Command Prompt Server).</li>
+                                    <li>Buka direktori root aplikasi <code>c:\xampp\htdocs\hr_plan</code>.</li>
+                                    <li>Eksekusi alat CLI pemulihan darurat:
+                                        <div class="bg-dark text-light p-2 rounded font-mono my-2 border">
+                                            php scripts/reset_admin.php hr@plant.local [sandi_baru]
+                                        </div>
+                                        <small class="text-muted d-block">Contoh: <code>php scripts/reset_admin.php hr@plant.local admin123</code></small>
+                                    </li>
+                                    <li><strong>Mekanisme Skrip:</strong> Skrip CLI ini langsung menghash password dengan <code>PASSWORD_BCRYPT</code> dan mengeksekusi update langsung ke tabel <code>employees</code> di MySQL dalam 1 detik tanpa perlu membuka browser.</li>
+                                </ol>
+
+                                <h6 class="font-weight-bold text-dark mb-2">B. Pemeliharaan &amp; Cadangan Database Otomatis</h6>
+                                <ul class="pl-3 mb-0">
+                                    <li><strong>Backup Rutin Terjadwal:</strong> Tim IT telah menyiapkan skrip <code>scripts/auto_backup.sh</code> untuk mengeksekusi dump otomatis database <code>planthr_db</code> secara periodik.</li>
+                                    <li><strong>Rotasi Log Cadangan:</strong> File cadangan berumur lebih dari 7 hari otomatis dibersihkan oleh sistem guna menghemat ruang penyimpanan server.</li>
+                                    <li><strong>Lokasi Direktori Cadangan:</strong> Seluruh cadangan tersimpan di direktori internal server yang terproteksi (tidak dapat diakses publik melalui browser).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-white py-2 d-flex justify-content-between">
+                <small class="text-muted">
+                    <i class="fas fa-lock mr-1 text-danger"></i> Dokumen Terproteksi Hak Akses RBAC &bull; PlantHR Lite Manufacturing Security System
+                </small>
+                <button type="button" class="btn btn-secondary btn-sm font-weight-bold px-4" data-dismiss="modal">
+                    Tutup SOP Internal
+                </button>
+            </div>
         </div>
     </div>
 </div>

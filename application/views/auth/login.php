@@ -127,64 +127,83 @@
     </div>
 </div>
 
-<!-- Modal Panduan Lupa Kata Sandi (SOP Tata Kelola Akun Pabrik) -->
+<!-- Modal Panduan Lupa Kata Sandi (SOP Layanan Karyawan) -->
 <div class="modal fade" id="modalForgotPassword" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-primary text-white">
-                <h6 class="modal-title font-weight-bold"><i class="fas fa-shield-alt mr-2"></i> SOP Bantuan Akun &amp; Pemulihan Kata Sandi</h6>
+                <h6 class="modal-title font-weight-bold"><i class="fas fa-shield-alt mr-2"></i> Bantuan Akun &amp; Pemulihan Kata Sandi</h6>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body p-4">
-                <div class="text-center mb-3">
+                <div class="text-center mb-4">
                     <span class="rounded-circle bg-light p-3 d-inline-block text-primary shadow-sm mb-2">
-                        <i class="fas fa-user-lock fa-2x"></i>
+                        <i class="fas fa-user-shield fa-2x"></i>
                     </span>
-                    <h5 class="font-weight-bold text-dark mb-1">Tata Kelola Akses &amp; Pemulihan Akun Pabrik</h5>
-                    <p class="text-muted small mb-0">Sistem HRMS terintegrasi dengan Payroll resmi, sehingga reset akun diatur secara berjenjang (RBAC):</p>
+                    <h5 class="font-weight-bold text-dark mb-1">Tata Cara Bantuan &amp; Pemulihan Akun Karyawan</h5>
+                    <p class="text-muted small mb-0">
+                        Demi menjaga kerahasiaan catatan kehadiran serta keamanan data perhitungan upah lembur resmi, ikuti prosedur resmi berikut:
+                    </p>
                 </div>
 
                 <div class="row">
-                    <!-- Skenario 1: Staf, Karyawan & Supervisor -->
-                    <div class="col-md-6 mb-3 mb-md-0">
+                    <!-- Langkah 1 & 2 -->
+                    <div class="col-md-6 mb-3">
                         <div class="border rounded p-3 h-100 bg-light">
                             <div class="d-flex align-items-center mb-2">
-                                <span class="badge badge-success px-2 py-1 mr-2"><i class="fas fa-user mr-1"></i> Staf / Karyawan &amp; SPV</span>
-                                <strong class="small text-dark">Lupa Sandi / Email</strong>
+                                <span class="badge badge-primary px-2 py-1 mr-2"><i class="fas fa-building mr-1"></i> Langkah 1</span>
+                                <strong class="small text-dark">Lapor ke Bagian Personalia (HRD)</strong>
                             </div>
-                            <small class="text-muted d-block mb-2">Ditangani langsung oleh <strong>Divisi HRD</strong>:</small>
-                            <ol class="small text-dark pl-3 mb-0" style="line-height: 1.8;">
-                                <li>Karyawan cukup menyebutkan <strong>NIP</strong> dan <strong>Nama Lengkap</strong> ke kantor HRD / Supervisor.</li>
-                                <li>Administrator Utama membuka menu <strong>Master Karyawan</strong> di portal.</li>
-                                <li>HRD menekan tombol kuning <i class="fas fa-key text-warning"></i> <strong>Reset Password</strong> untuk mengembalikan sandi ke default (<code>admin123</code>).</li>
-                                <li>Karyawan langsung dapat login kembali seketika.</li>
-                            </ol>
+                            <p class="small text-muted mb-0">
+                                Karyawan yang lupa kata sandi atau mengalami kendala login dapat melapor langsung ke ruang kantor <strong>HRD / Personalia</strong> atau melalui <strong>Supervisor</strong> yang bertugas pada jam kerja shift Anda.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Skenario 2: Administrator Utama -->
+                    <div class="col-md-6 mb-3">
+                        <div class="border rounded p-3 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge badge-primary px-2 py-1 mr-2"><i class="fas fa-id-card mr-1"></i> Langkah 2</span>
+                                <strong class="small text-dark">Verifikasi Identitas Resmi</strong>
+                            </div>
+                            <p class="small text-muted mb-0">
+                                Sebutkan <strong>Nomor Induk Karyawan (NIP)</strong> dan tunjukkan <strong>ID Badge Pabrik</strong> Anda kepada petugas HRD untuk memastikan keabsahan kepemilikan akun personil.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Langkah 3 & 4 -->
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="border rounded p-3 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge badge-success px-2 py-1 mr-2"><i class="fas fa-key mr-1"></i> Langkah 3</span>
+                                <strong class="small text-dark">Penerbitan Kredensial Baru</strong>
+                            </div>
+                            <p class="small text-muted mb-0">
+                                Petugas HRD yang berwenang akan memverifikasi data Anda dan menerbitkan kata sandi baru yang aman secara langsung kepada Anda.
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="col-md-6">
                         <div class="border rounded p-3 h-100 bg-light">
                             <div class="d-flex align-items-center mb-2">
-                                <span class="badge badge-dark px-2 py-1 mr-2"><i class="fas fa-user-shield mr-1"></i> Administrator Utama</span>
-                                <strong class="small text-dark">Pemulihan Darurat (Disaster Recovery)</strong>
+                                <span class="badge badge-warning text-dark px-2 py-1 mr-2"><i class="fas fa-lock mr-1"></i> Langkah 4</span>
+                                <strong class="small text-dark">Login &amp; Ganti Sandi Mandiri</strong>
                             </div>
-                            <small class="text-muted d-block mb-2">Ditangani oleh <strong>Tim IT / Sysadmin</strong>:</small>
-                            <ol class="small text-dark pl-3 mb-0" style="line-height: 1.8;">
-                                <li>Jika akun Administrator Utama terkunci, hubungi <strong>Tim IT / Database Administrator</strong>.</li>
-                                <li>Tim IT mengeksekusi alat darurat di terminal server:
-                                    <code class="d-block mt-1 p-1 bg-white border rounded text-primary">php scripts/reset_admin.php</code>
-                                </li>
-                                <li>Sandi Administrator Utama langsung tereset menjadi <code>admin123</code> dalam 1 detik tanpa perlu membuka web.</li>
-                            </ol>
+                            <p class="small text-muted mb-0">
+                                Setelah berhasil login ke portal, Anda disarankan untuk segera memperbarui kata sandi baru demi menjaga privasi dan keamanan akun Anda sendiri.
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="alert alert-info border-0 mt-3 mb-0 small d-flex align-items-center">
-                    <i class="fas fa-info-circle fa-lg mr-2 flex-shrink-0 text-info"></i>
-                    <div>
-                        <strong>Inisialisasi Sistem Baru (Day-0):</strong> Pendaftaran seluruh akun karyawan dikelola terpusat oleh Administrator Utama (HR) melalui menu <strong>Master Karyawan</strong> guna mencegah pendaftaran ilegal yang dapat memanipulasi absensi dan upah lembur.
+                <div class="alert alert-secondary border-0 mt-3 mb-0 small">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-info-circle text-primary mt-1 mr-2 flex-shrink-0"></i>
+                        <div>
+                            <strong>Kebijakan Privasi &amp; Keamanan Akun:</strong> Sistem PlantHR Lite terhubung langsung dengan data absensi dan kalkulasi upah lembur resmi. Sistem <strong>tidak menggunakan reset otomatis via email publik</strong> guna mencegah risiko manipulasi kehadiran atau pencurian identitas kerja. Petugas HRD maupun Tim IT <strong>tidak akan pernah</strong> meminta kata sandi pribadi Anda melalui telepon atau pesan singkat.
+                        </div>
                     </div>
                 </div>
             </div>
