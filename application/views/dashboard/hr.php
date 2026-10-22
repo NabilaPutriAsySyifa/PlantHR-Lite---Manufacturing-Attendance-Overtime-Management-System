@@ -621,7 +621,7 @@
                                 <th>Gender</th>
                                 <th>Departemen</th>
                                 <th>Alokasi Shift</th>
-                                <th>Hak Akses (Role)</th>
+                                <th>Wewenang Akun</th>
                                 <th>Gaji Pokok</th>
                                 <th>Email Login</th>
                                 <th>Status</th>
@@ -639,11 +639,11 @@
                                     <td><?= $e->shift_name; ?></td>
                                     <td>
                                         <?php if ($e->role == 'HR_ADMIN'): ?>
-                                            <span class="badge badge-warning text-dark font-weight-bold">HR_ADMIN</span>
+                                            <span class="badge badge-warning text-dark font-weight-bold"><i class="fas fa-shield-alt mr-1"></i>ADMIN UTAMA</span>
                                         <?php elseif ($e->role == 'SUPERVISOR'): ?>
-                                            <span class="badge badge-primary font-weight-bold">SUPERVISOR</span>
+                                            <span class="badge badge-primary font-weight-bold"><i class="fas fa-user-check mr-1"></i>SUPERVISOR</span>
                                         <?php else: ?>
-                                            <span class="badge badge-success font-weight-bold">OPERATOR</span>
+                                            <span class="badge badge-success font-weight-bold"><i class="fas fa-user mr-1"></i>STAF / PELAKSANA</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="font-mono">Rp <?= number_format($e->base_salary, 0, ',', '.'); ?></td>
@@ -1019,16 +1019,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="font-weight-bold small text-dark"><i class="fas fa-user-shield text-warning mr-1"></i> HAK AKSES SISTEM (ROLE) *</label>
+                    <div class="col-md-5 mb-3">
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-user-shield text-warning mr-1"></i> TINGKAT WEWENANG AKUN (ROLE) *</label>
                         <select name="role" class="form-control" required>
-                            <option value="OPERATOR">OPERATOR (Pelaksana)</option>
-                            <option value="SUPERVISOR">SUPERVISOR (Pemeriksa)</option>
-                            <option value="HR_ADMIN">HR_ADMIN (Administrator)</option>
+                            <option value="OPERATOR">1. STAF / KARYAWAN (Pelaksana: Finance, SCM, Produksi, dll)</option>
+                            <option value="SUPERVISOR">2. SUPERVISOR / ATASAN (Penyetuju Lembur Departemen)</option>
+                            <option value="HR_ADMIN">3. ADMINISTRATOR UTAMA (HR &amp; Pengelola Sistem Pabrik)</option>
                         </select>
-                        <small class="text-info font-weight-bold d-block mt-1"><i class="fas fa-lock mr-1"></i>Otoritas login aplikasi</small>
+                        <small class="text-info font-weight-bold d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tingkat hak akses: Staf biasa, Atasan penyetuju, atau Admin.</small>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label class="font-weight-bold small text-muted">GAJI POKOK ACUAN (RP) *</label>
                         <input type="number" name="base_salary" class="form-control" value="4500000" min="1000000" step="50000" required>
                     </div>
@@ -1134,11 +1134,11 @@
                         </select>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="font-weight-bold small text-dark"><i class="fas fa-user-shield text-warning mr-1"></i> HAK AKSES SISTEM (ROLE) *</label>
+                        <label class="font-weight-bold small text-dark"><i class="fas fa-user-shield text-warning mr-1"></i> TINGKAT WEWENANG AKUN (ROLE) *</label>
                         <select name="role" id="edit_role" class="form-control" required>
-                            <option value="OPERATOR">OPERATOR (Pelaksana)</option>
-                            <option value="SUPERVISOR">SUPERVISOR (Pemeriksa)</option>
-                            <option value="HR_ADMIN">HR_ADMIN (Administrator)</option>
+                            <option value="OPERATOR">STAF / KARYAWAN (Pelaksana)</option>
+                            <option value="SUPERVISOR">SUPERVISOR / ATASAN (Penyetuju)</option>
+                            <option value="HR_ADMIN">ADMINISTRATOR UTAMA</option>
                         </select>
                     </div>
                     <div class="col-md-4 mb-3">
